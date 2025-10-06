@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historical Event Lookup</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>On This Day In History</h1>
+            <p class="subtitle">A Curated Archive for Serious Readers</p>
+        </header>
+
+        <div class="controls-wrapper">
+            <div class="controls">
+                <select id="monthSelector" class="control-input">
+                    <option value="">SELECT MONTH</option>
+                </select>
+
+                <select id="daySelector" class="control-input">
+                    <option value="">SELECT DAY</option>
+                </select>
+                
+                <button onclick="lookupEvent()" class="control-button">SEARCH ARCHIVE</button>
+            </div>
+        </div>
+
+        <div class="results-area">
+            <h2>Archived Entries</h2>
+            <ul id="eventList" class="event-list">
+                <li class="event-item placeholder">
+                    <span class="year-label">System:</span> Select a date and unlock history.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
