@@ -155,4 +155,18 @@ header h1 {
 
 .placeholder {
     color: #999;
+
+}
+
+/* --- NEW STYLE: Link Appearance for Events --- */
+.event-link {
+    text-decoration: none; /* Removes the underline */
+    color: inherit; /* Inherits the black text color */
+    display: block; /* Makes the entire list item block clickable */
+    transition: color 0.2s ease;
+}
+
+/* Add a visual cue when the user hovers over the clickable event */
+.event-link:hover {
+    color: #444444; /* Dark gray color on hover */
 }
