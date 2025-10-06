@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', loadDataAndPopulateControls);
 // --- 2. FUNCTION TO FETCH AND DISPLAY EVENTS ---
 
 async function lookupEvent() {
-    // We use .value to get the selected number
     const month = document.getElementById('monthSelector').value;
     const day = document.getElementById('daySelector').value;
     const eventList = document.getElementById('eventList');
@@ -41,13 +40,13 @@ async function lookupEvent() {
     // Clear previous results and show loading message
     eventList.innerHTML = '<li class="event-item placeholder">Fetching data from Wikipedia...</li>'; 
 
-    // Validation (Checks if a month and day were actually selected)
+    // Validation 
     if (!month || !day) {
         eventList.innerHTML = '<li class="event-item placeholder">Please select both a Month and a Day.</li>';
         return;
     }
     
-    // Construct the API URL: API_BASE_URL + month_number + day_number
+    // Construct the API URL
     const apiUrl = `${API_BASE_URL}${month}/${day}`;
 
     try {
@@ -58,8 +57,6 @@ async function lookupEvent() {
         }
         
         const data = await response.json();
-
-        // Wikipedia returns an array of events under the 'selected' key
         const events = data.selected || [];
         
         eventList.innerHTML = ''; // Clear loading message
@@ -70,8 +67,26 @@ async function lookupEvent() {
                 const li = document.createElement('li');
                 li.className = 'event-item';
                 
-                // Format: Year: Description
-                li.innerHTML = `<span class="year-label">${item.year}:</span> ${item.text}`;
+                // --- MODIFICATION START: CREATE CLICKABLE LINK ---
+                
+                // Wikipedia provides a link to the main page related to the event
+                const articleLink = item.pages && item.pages.length > 0 ? item.pages[0].content_urls.desktop.page : null;
+                
+                // Create the text content (Year: Description)
+                const eventText = `${item.year}: ${item.text}`;
+                
+                if (articleLink) {
+                    // If a link exists, wrap the entire content in a clickable <a> tag
+                    li.innerHTML = `<a href="${articleLink}" target="_blank" class="event-link">
+                                        <span class="year-label">${item.year}:</span> ${item.text}
+                                    </a>`;
+                } else {
+                    // If no specific article link is found, display as plain text
+                    li.innerHTML = `<span class="year-label">${item.year}:</span> ${item.text} (Link Not Found)`;
+                }
+                
+                // --- MODIFICATION END ---
+                
                 eventList.appendChild(li);
             });
         } else {
