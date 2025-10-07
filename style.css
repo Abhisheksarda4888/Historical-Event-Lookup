@@ -37,14 +37,14 @@ body {
     overflow: hidden;
 }
 
-/* --- MODAL STYLES --- */
+/* --- MODAL STYLES (VIBRANT ENTRY POINT) --- */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.9); 
+    background-color: #E6E6FA; /* Light Lavender background */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -52,21 +52,30 @@ body {
 }
 
 .modal-content {
-    background-color: var(--color-background);
+    background-color: var(--color-secondary); 
     color: var(--color-primary);
-    padding: 40px;
+    padding: 50px; 
     border: 3px solid var(--color-primary);
     box-shadow: 10px 10px 0 var(--color-primary);
     width: 90%;
-    max-width: 500px;
+    max-width: 550px; 
     text-align: center;
+    border-radius: 15px; 
 }
 
 .modal-title {
     font-family: var(--font-heading);
-    font-size: 1.8em;
-    margin-bottom: 20px;
+    font-size: 1.8em; 
+    margin-bottom: 5px;
+    color: #4169E1; /* Royal Blue accent color */
     text-transform: uppercase;
+}
+
+.modal-content p {
+    font-family: var(--font-body);
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 40px;
 }
 
 .modal-buttons {
@@ -78,22 +87,27 @@ body {
 
 .modal-btn {
     padding: 15px 20px;
-    background-color: var(--color-primary);
+    background-color: #4169E1; 
     color: var(--color-secondary);
-    border: 2px solid var(--color-primary);
-    cursor: pointer;
+    border: 3px solid #1A1A1A; 
+    border-radius: 8px; 
     text-transform: uppercase;
     font-weight: 700;
-    transition: all 0.2s;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 4px 4px 0 #1A1A1A; 
 }
 
 .modal-btn:hover {
-    background-color: var(--color-secondary);
-    color: var(--color-primary);
+    background-color: #1A1A1A; 
+    color: var(--color-secondary);
+    transform: translateY(-2px); 
+    box-shadow: 6px 6px 0 #4169E1; 
 }
 
 
-/* --- HEADER FLEXBOX STYLES --- */
+/* --- HEADER AND NAVIGATION STYLES --- */
 header {
     background-color: var(--color-secondary);
     color: var(--color-primary);
@@ -109,9 +123,9 @@ header {
 
 .header-left {
     text-align: left;
-    display: flex; /* Makes space for the back button */
+    display: flex; 
     align-items: center;
-    gap: 15px; /* Spacing between icon/title */
+    gap: 15px; 
 }
 
 /* Back Button Styling */
@@ -120,6 +134,7 @@ header {
     font-size: 1.5em;
     color: #444;
     transition: color 0.2s;
+    display: block; 
 }
 
 .back-btn:hover {
@@ -284,7 +299,7 @@ header h1 {
     background-color: var(--color-background); 
     text-align: center;
     border-top: 1px dashed var(--color-border);
-    border-bottom: 2px solid var(--color-primary); /* Separates controls from results */
+    border-bottom: 2px solid var(--color-primary); 
 }
 
 .clear-button {
@@ -310,7 +325,33 @@ header h1 {
     border-color: var(--color-primary);
 }
 
-/* --- RESULTS AREA --- */
+/* --- SCROLL UP BUTTON STYLES (NEW) --- */
+.scroll-up-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    border: 2px solid var(--color-secondary);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5em;
+    line-height: 50px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    z-index: 999;
+    transition: opacity 0.3s;
+}
+
+.scroll-up-btn.hidden-app {
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+/* --- RESULTS AREA (Existing) --- */
 .results-area {
     padding: 30px;
     text-align: left;
@@ -359,7 +400,7 @@ header h1 {
     color: #999;
 }
 
-/* --- Link Appearance for Events --- */
+/* --- Link Appearance for Events (Existing) --- */
 .event-link {
     text-decoration: none; 
     color: inherit; 
@@ -371,7 +412,7 @@ header h1 {
     color: #444444; 
 }
 
-/* --- APP FOOTER STYLES --- */
+/* --- APP FOOTER STYLES (Existing) --- */
 .app-footer {
     text-align: center;
     font-family: var(--font-body);
