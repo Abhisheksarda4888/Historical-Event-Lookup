@@ -37,7 +37,7 @@ body {
     overflow: hidden;
 }
 
-/* --- MODAL STYLES --- */
+/* --- MODAL STYLES (NEW) --- */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -116,7 +116,6 @@ header {
     margin-left: 15px; 
 }
 
-/* Clock Style */
 .real-time-clock {
     font-family: var(--font-body);
     font-size: 0.85em;
@@ -125,7 +124,6 @@ header {
     white-space: nowrap; 
 }
 
-/* Header Text */
 header h1 {
     font-family: var(--font-heading);
     font-size: 2.2em;
@@ -196,6 +194,33 @@ header h1 {
     color: var(--color-primary);
     box-shadow: 3px 3px 0 #555555;
 }
+
+/* --- SEARCH VIEW STYLES (NEW) --- */
+#searchView .search-controls-wrapper {
+    padding: 20px 30px;
+    background-color: #f2f2f2;
+}
+
+.search-input-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.search-input {
+    flex-grow: 1;
+    height: 45px;
+    border: 2px solid var(--color-primary);
+    padding: 0 15px;
+    font-family: var(--font-body);
+    text-transform: none; /* Allows normal case text input */
+}
+
+.search-button {
+    padding: 0 15px; 
+    white-space: nowrap;
+}
+
 
 /* --- QUICK SEARCH STYLES (Existing) --- */
 .quick-searches-wrapper {
