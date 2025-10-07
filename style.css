@@ -37,7 +37,7 @@ body {
     overflow: hidden;
 }
 
-/* --- MODAL STYLES (NEW) --- */
+/* --- MODAL STYLES --- */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -93,7 +93,7 @@ body {
 }
 
 
-/* --- HEADER FLEXBOX STYLES (Existing) --- */
+/* --- HEADER FLEXBOX STYLES --- */
 header {
     background-color: var(--color-secondary);
     color: var(--color-primary);
@@ -109,6 +109,21 @@ header {
 
 .header-left {
     text-align: left;
+    display: flex; /* Makes space for the back button */
+    align-items: center;
+    gap: 15px; /* Spacing between icon/title */
+}
+
+/* Back Button Styling */
+.back-btn {
+    cursor: pointer;
+    font-size: 1.5em;
+    color: #444;
+    transition: color 0.2s;
+}
+
+.back-btn:hover {
+    color: var(--color-primary);
 }
 
 .header-right {
@@ -140,7 +155,7 @@ header h1 {
     font-family: var(--font-body);
 }
 
-/* --- CONTROLS SECTION (Existing) --- */
+/* --- CONTROLS SECTION --- */
 .controls-wrapper {
     padding: 20px 30px;
     background-color: #f2f2f2;
@@ -195,10 +210,11 @@ header h1 {
     box-shadow: 3px 3px 0 #555555;
 }
 
-/* --- SEARCH VIEW STYLES (NEW) --- */
+/* --- SEARCH VIEW STYLES --- */
 #searchView .search-controls-wrapper {
     padding: 20px 30px;
     background-color: #f2f2f2;
+    border-bottom: 2px solid var(--color-primary);
 }
 
 .search-input-group {
@@ -213,7 +229,7 @@ header h1 {
     border: 2px solid var(--color-primary);
     padding: 0 15px;
     font-family: var(--font-body);
-    text-transform: none; /* Allows normal case text input */
+    text-transform: none; 
 }
 
 .search-button {
@@ -222,7 +238,7 @@ header h1 {
 }
 
 
-/* --- QUICK SEARCH STYLES (Existing) --- */
+/* --- QUICK SEARCH STYLES --- */
 .quick-searches-wrapper {
     padding: 10px 30px 20px;
     background-color: var(--color-secondary);
@@ -262,7 +278,39 @@ header h1 {
 }
 
 
-/* --- RESULTS AREA (Existing) --- */
+/* --- CLEAR BUTTON STYLES --- */
+.clear-wrapper {
+    padding: 10px 30px;
+    background-color: var(--color-background); 
+    text-align: center;
+    border-top: 1px dashed var(--color-border);
+    border-bottom: 2px solid var(--color-primary); /* Separates controls from results */
+}
+
+.clear-button {
+    background-color: var(--color-secondary); 
+    color: #777; 
+    border: 1px solid #777; 
+    padding: 8px 15px;
+    font-size: 0.8em;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    width: 100%; 
+    max-width: 300px;
+    margin: 10px auto;
+    display: block;
+}
+
+.clear-button:hover {
+    background-color: #F0F0F0;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+/* --- RESULTS AREA --- */
 .results-area {
     padding: 30px;
     text-align: left;
@@ -311,7 +359,7 @@ header h1 {
     color: #999;
 }
 
-/* --- Link Appearance for Events (Existing) --- */
+/* --- Link Appearance for Events --- */
 .event-link {
     text-decoration: none; 
     color: inherit; 
@@ -323,7 +371,7 @@ header h1 {
     color: #444444; 
 }
 
-/* --- APP FOOTER STYLES (Existing) --- */
+/* --- APP FOOTER STYLES --- */
 .app-footer {
     text-align: center;
     font-family: var(--font-body);
@@ -337,7 +385,7 @@ header h1 {
 }
 
 
-/* --- MOBILE RESPONSIVENESS (Existing) --- */
+/* --- MOBILE RESPONSIVENESS --- */
 @media (max-width: 650px) {
     .container {
         max-width: 95%; 
@@ -354,17 +402,17 @@ header h1 {
         margin-left: 0;
     }
 
-    .controls, .quick-searches-wrapper {
+    .controls, .quick-searches-wrapper, .search-input-group {
         flex-direction: column;
         gap: 10px;
     }
     
-    .control-input, .control-button, .quick-button {
+    .control-input, .control-button, .quick-button, .search-input, .search-button {
         width: 100%; 
-        margin: 0;
+        margin: 0 !important;
     }
 
-    header, .controls-wrapper, .quick-searches-wrapper, .results-area {
+    header, .controls-wrapper, .quick-searches-wrapper, .results-area, .search-controls-wrapper, .clear-wrapper {
         padding-left: 15px;
         padding-right: 15px;
     }
