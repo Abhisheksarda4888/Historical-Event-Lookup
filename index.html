@@ -11,8 +11,15 @@
 
     <div class="container">
         <header>
-            <h1>On This Day In History</h1>
-            <p class="subtitle">A Curated Archive for Serious Readers</p>
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>On This Day In History</h1>
+                    <p class="subtitle">A Curated Archive for Serious Readers</p>
+                </div>
+                <div class="header-right">
+                    <div id="realTimeClock" class="real-time-clock">Loading Clock...</div>
+                </div>
+            </div>
         </header>
 
         <div class="controls-wrapper">
@@ -20,7 +27,6 @@
                 <select id="monthSelector" class="control-input">
                     <option value="">SELECT MONTH</option>
                 </select>
-
                 <select id="daySelector" class="control-input">
                     <option value="">SELECT DAY</option>
                 </select>
@@ -37,6 +43,7 @@
                 RANDOM DATE
             </button>
         </div>
+
         <div class="results-area">
             <h2>Archived Entries</h2>
             <ul id="eventList" class="event-list">
