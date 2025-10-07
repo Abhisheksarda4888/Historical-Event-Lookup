@@ -40,6 +40,18 @@
                     <option value="before1800">Before 1800</option>
                 </select>
                 
+                <select id="categoryFilter" class="control-input" onchange="lookupEvent()">
+                    <option value="all">FILTER BY CATEGORY (ALL)</option>
+                    <option value="science">Science & Technology</option>
+                    <option value="wars">Wars & Conflicts</option>
+                    <option value="art">Art, Literature & Music</option>
+                    <option value="politics">Politics & Legislation</option>
+                    <option value="disaster">Disasters & Accidents</option>
+                    <option value="sports">Sports & Records</option>
+                    <option value="economy">Economy & Business</option>
+                    <option value="births">Births of Notable People</option>
+                </select>
+                
                 <button onclick="lookupEvent()" class="control-button">SEARCH ARCHIVE</button>
             </div>
         </div>
@@ -52,13 +64,7 @@
                 RANDOM DATE
             </button>
         </div>
-        
-        <div class="category-wrapper">
-            <button onclick="setCategory('all')" class="category-button active-category" data-category="all">ALL</button>
-            <button onclick="setCategory('science')" class="category-button" data-category="science">SCIENCE</button>
-            <button onclick="setCategory('wars')" class="category-button" data-category="wars">WARS</button>
-            <button onclick="setCategory('art')" class="category-button" data-category="art">ART & LIT</button>
-        </div>
+
         <div class="results-area">
             <h2>Archived Entries</h2>
             <ul id="eventList" class="event-list">
