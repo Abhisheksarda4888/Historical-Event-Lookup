@@ -16,9 +16,9 @@
                     <h1>On This Day In History</h1>
                     <p class="subtitle">A Curated Archive for Serious Readers</p>
                 </div>
-               <div class="header-right">
-
-                <span id="realTimeClock">Loading Clock...</span>
+                <div class="header-right">
+                    <div id="realTimeClock" class="real-time-clock">Loading Clock...</div>
+                </div>
             </div>
         </header>
 
@@ -27,8 +27,17 @@
                 <select id="monthSelector" class="control-input">
                     <option value="">SELECT MONTH</option>
                 </select>
+
                 <select id="daySelector" class="control-input">
                     <option value="">SELECT DAY</option>
+                </select>
+                
+                <select id="yearFilter" class="control-input">
+                    <option value="all">ALL TIME</option>
+                    <option value="2000">21st Century (2001 - Present)</option>
+                    <option value="1900">20th Century (1901 - 2000)</option>
+                    <option value="1800">19th Century (1801 - 1900)</option>
+                    <option value="before1800">Before 1800</option>
                 </select>
                 
                 <button onclick="lookupEvent()" class="control-button">SEARCH ARCHIVE</button>
@@ -53,14 +62,11 @@
             </ul>
         </div>
     </div>
-<div class="app-footer">
+    
+    <div class="app-footer">
         Made With ❤️ By Abhishek Sarda
     </div>
+
     <script src="app.js"></script>
 </body>
 </html>
-
-
-
-
-
