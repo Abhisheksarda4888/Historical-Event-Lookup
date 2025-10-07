@@ -46,7 +46,7 @@ function updateClock() {
     }
 }
 
-// Function that runs when the Historical View is selected
+// Function to populate controls AND update the "TODAY'S HISTORY" button text
 function loadDataAndPopulateControls() {
     // Populate Month (1 to 12) and Day (1 to 31) dropdowns
     populateDropdown('monthSelector', 12);
@@ -72,15 +72,15 @@ function loadDataAndPopulateControls() {
 
 // --- NEW NAVIGATION LOGIC ---
 
+// Function to show the initial decision modal (used by the back button)
 function showModal() {
     const modal = document.getElementById('initialModal');
     const mainApp = document.getElementById('mainApp');
-    
-    // Hide the main application content
+    const scrollBtn = document.getElementById('scrollUpBtn');
+
     mainApp.classList.add('hidden-app');
-    
-    // Show the modal
     modal.classList.remove('hidden-app');
+    scrollBtn.classList.add('hidden-app'); // Hide scroll button
 }
 
 function selectPath(path) {
@@ -88,7 +88,8 @@ function selectPath(path) {
     const mainApp = document.getElementById('mainApp');
     const historicalView = document.getElementById('historicalView');
     const searchView = document.getElementById('searchView');
-    
+    const scrollBtn = document.getElementById('scrollUpBtn');
+
     // 1. Hide the modal and show the main app container
     modal.classList.add('hidden-app');
     mainApp.classList.remove('hidden-app');
@@ -97,23 +98,45 @@ function selectPath(path) {
     if (path === 'historical') {
         historicalView.classList.remove('hidden-app');
         searchView.classList.add('hidden-app');
-        // Initialize the historical controls and clock
-        loadDataAndPopulateControls();
+        loadDataAndPopulateControls(); // Initialize controls and clock updates
     } else if (path === 'search') {
         searchView.classList.remove('hidden-app');
         historicalView.classList.add('hidden-app');
     }
+    
+    // Show scroll button after a path is selected
+    scrollBtn.classList.remove('hidden-app');
 }
 
 // Ensure the clock starts running immediately on DOM load
 document.addEventListener('DOMContentLoaded', () => {
-    // Start the clock and its interval as soon as the page structure is available
+    // Start the clock interval
     updateClock(); 
     setInterval(updateClock, 1000); 
+
+    // Add scroll event listener to show/hide the scroll-up button
+    window.addEventListener('scroll', toggleScrollUpButton);
 });
 
+// --- NEW SCROLL UP LOGIC ---
 
-// --- 3. FILTERING LOGIC ---
+// Function to check scroll position and toggle button visibility
+function toggleScrollUpButton() {
+    const scrollBtn = document.getElementById('scrollUpBtn');
+    if (window.scrollY > 300) { // Show button if scrolled down more than 300px
+        scrollBtn.classList.remove('hidden-app');
+    } else {
+        scrollBtn.classList.add('hidden-app');
+    }
+}
+
+// Function to scroll the page smoothly to the top
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+
+// --- 2. FILTERING LOGIC (Existing) ---
 
 function applyYearFilter(events, filterValue) {
     if (filterValue === 'all') {
@@ -156,7 +179,7 @@ function applyCategoryFilter(events, category) {
 }
 
 
-// --- 4. HISTORICAL LOOKUP FUNCTION ---
+// --- 3. HISTORICAL LOOKUP FUNCTION (Existing) ---
 
 async function lookupEvent() {
     const monthSelector = document.getElementById('monthSelector');
@@ -190,7 +213,7 @@ async function lookupEvent() {
         const data = await response.json();
         const rawEvents = data.selected || [];
         
-        // 1. Apply Filters
+        // Apply Filters
         const yearFilteredEvents = applyYearFilter(rawEvents, filterValue);
         const filteredEvents = applyCategoryFilter(yearFilteredEvents, categoryFilterValue);
 
@@ -231,7 +254,7 @@ async function lookupEvent() {
 }
 
 
-// --- 5. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS ---
+// --- 4. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS ---
 
 function searchToday() {
     const today = new Date();
@@ -308,7 +331,8 @@ async function searchTopic() {
     }
 }
 
-// --- NEW CLEAR SEARCH FUNCTIONS ---
+
+// --- 6. CLEAR SEARCH FUNCTIONS ---
 
 function clearHistoryResults() {
     const eventList = document.getElementById('eventList');
