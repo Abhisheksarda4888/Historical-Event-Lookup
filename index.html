@@ -89,7 +89,20 @@
         
         <div id="searchView" class="hidden-app">
             <div class="search-controls-wrapper">
-                <p style="padding: 40px; text-align: center;">General Topic Search functionality is not yet built. Please use the Historical Archive for now!</p>
+                <div class="search-input-group">
+                    <input type="text" id="topicSearchInput" placeholder="Search any topic on Wikipedia..." class="control-input search-input">
+                    <button onclick="searchTopic()" class="control-button search-button">
+                        SEARCH WIKIPEDIA
+                    </button>
+                </div>
+            </div>
+            <div class="results-area">
+                <h2>Search Results</h2>
+                <ul id="topicResultList" class="event-list">
+                    <li class="event-item placeholder">
+                        <span class="year-label">System:</span> Enter a topic to begin searching.
+                    </li>
+                </ul>
             </div>
         </div>
         
