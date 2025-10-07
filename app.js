@@ -46,7 +46,7 @@ function updateClock() {
     }
 }
 
-// Function to populate controls AND update the "TODAY'S HISTORY" button text
+// Function that runs when the Historical View is selected
 function loadDataAndPopulateControls() {
     // Populate Month (1 to 12) and Day (1 to 31) dropdowns
     populateDropdown('monthSelector', 12);
@@ -70,7 +70,19 @@ function loadDataAndPopulateControls() {
     }
 }
 
-// --- NEW PATH SELECTION LOGIC ---
+// --- NEW NAVIGATION LOGIC ---
+
+function showModal() {
+    const modal = document.getElementById('initialModal');
+    const mainApp = document.getElementById('mainApp');
+    
+    // Hide the main application content
+    mainApp.classList.add('hidden-app');
+    
+    // Show the modal
+    modal.classList.remove('hidden-app');
+}
+
 function selectPath(path) {
     const modal = document.getElementById('initialModal');
     const mainApp = document.getElementById('mainApp');
@@ -83,19 +95,15 @@ function selectPath(path) {
     
     // 2. Determine which specific view to show
     if (path === 'historical') {
-        // Show the Historical Lookup UI
         historicalView.classList.remove('hidden-app');
         searchView.classList.add('hidden-app');
         // Initialize the historical controls and clock
         loadDataAndPopulateControls();
     } else if (path === 'search') {
-        // Show the Topic Search UI
         searchView.classList.remove('hidden-app');
         historicalView.classList.add('hidden-app');
-        // No specific initialization needed for the search view right now
     }
 }
-
 
 // Ensure the clock starts running immediately on DOM load
 document.addEventListener('DOMContentLoaded', () => {
@@ -105,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// --- 2. FILTERING LOGIC ---
+// --- 3. FILTERING LOGIC ---
 
 function applyYearFilter(events, filterValue) {
     if (filterValue === 'all') {
@@ -148,7 +156,7 @@ function applyCategoryFilter(events, category) {
 }
 
 
-// --- 3. HISTORICAL LOOKUP FUNCTION ---
+// --- 4. HISTORICAL LOOKUP FUNCTION ---
 
 async function lookupEvent() {
     const monthSelector = document.getElementById('monthSelector');
@@ -182,11 +190,11 @@ async function lookupEvent() {
         const data = await response.json();
         const rawEvents = data.selected || [];
         
-        // Apply Filters
+        // 1. Apply Filters
         const yearFilteredEvents = applyYearFilter(rawEvents, filterValue);
         const filteredEvents = applyCategoryFilter(yearFilteredEvents, categoryFilterValue);
 
-        eventList.innerHTML = ''; 
+        eventList.innerHTML = ''; // Clear loading message
 
         if (filteredEvents.length > 0) {
             filteredEvents.forEach(item => {
@@ -223,7 +231,7 @@ async function lookupEvent() {
 }
 
 
-// --- 4. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS ---
+// --- 5. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS ---
 
 function searchToday() {
     const today = new Date();
@@ -262,7 +270,6 @@ async function searchTopic() {
     // Show loading state
     resultList.innerHTML = `<li class="event-item placeholder">Searching Wikipedia for "${query}"...</li>`;
     
-    // Wikipedia API requires CORS bypass on client-side requests using '&origin=*'
     const apiUrl = `${WIKI_SEARCH_API}${encodeURIComponent(query)}&origin=*`;
 
     try {
@@ -285,7 +292,6 @@ async function searchTopic() {
                 // Construct the direct link using the page title
                 const articleUrl = WIKI_PAGE_URL + encodeURIComponent(item.title.replace(/ /g, '_'));
 
-                // Use snippet provided by Wikipedia
                 li.innerHTML = `<a href="${articleUrl}" target="_blank" class="event-link">
                                     <span class="year-label">${item.title}</span><br>
                                     ${item.snippet}...
@@ -300,4 +306,23 @@ async function searchTopic() {
         console.error("Error fetching search results:", error);
         resultList.innerHTML = `<li class="event-item" style="color: red;">Error accessing Wikipedia Search. (${error.message})</li>`;
     }
+}
+
+// --- NEW CLEAR SEARCH FUNCTIONS ---
+
+function clearHistoryResults() {
+    const eventList = document.getElementById('eventList');
+    eventList.innerHTML = `<li class="event-item placeholder">
+        <span class="year-label">System:</span> Results cleared. Select a new date.
+    </li>`;
+}
+
+function clearTopicResults() {
+    const resultList = document.getElementById('topicResultList');
+    const searchInput = document.getElementById('topicSearchInput');
+    
+    resultList.innerHTML = `<li class="event-item placeholder">
+        <span class="year-label">System:</span> Enter a topic to begin searching.
+    </li>`;
+    searchInput.value = ''; // Clear the input bar as well
 }
