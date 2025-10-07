@@ -3,17 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historical Event Lookup</title>
+    <title>The Curated Archive</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="container">
+    <div id="initialModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="modal-title">THE CURATED ARCHIVE</h2>
+            <p>Select your research path:</p>
+            <div class="modal-buttons">
+                <button class="modal-btn" onclick="selectPath('historical')">
+                    ON THIS DAY IN HISTORY
+                </button>
+                <button class="modal-btn" onclick="selectPath('search')">
+                    TOPIC SEARCH (Any Wikipedia Article)
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="mainApp" class="container hidden-app">
+        
         <header>
             <div class="header-content">
                 <div class="header-left">
-                    <h1>On This Day In History</h1>
+                    <h1>The Curated Archive</h1>
                     <p class="subtitle">A Curated Archive for Serious Readers</p>
                 </div>
                 <div class="header-right">
@@ -22,64 +37,68 @@
             </div>
         </header>
 
-        <div class="controls-wrapper">
-            <div class="controls">
-                <select id="monthSelector" class="control-input">
-                    <option value="">SELECT MONTH</option>
-                </select>
+        <div id="historicalView" class="hidden-app"> 
+            <div class="controls-wrapper">
+                <div class="controls">
+                    <select id="monthSelector" class="control-input">
+                        <option value="">SELECT MONTH</option>
+                    </select>
+                    <select id="daySelector" class="control-input">
+                        <option value="">SELECT DAY</option>
+                    </select>
+                    <select id="yearFilter" class="control-input">
+                        <option value="all">ALL TIME</option>
+                        <option value="2000">21st Century (2001 - Present)</option>
+                        <option value="1900">20th Century (1901 - 2000)</option>
+                        <option value="1800">19th Century (1801 - 1900)</option>
+                        <option value="before1800">Before 1800</option>
+                    </select>
+                    <select id="categoryFilter" class="control-input" onchange="lookupEvent()">
+                        <option value="all">FILTER BY CATEGORY (ALL)</option>
+                        <option value="science">Science & Technology</option>
+                        <option value="wars">Wars & Conflicts</option>
+                        <option value="art">Art, Literature & Music</option>
+                        <option value="politics">Politics & Legislation</option>
+                        <option value="disaster">Disasters & Accidents</option>
+                        <option value="sports">Sports & Records</option>
+                        <option value="economy">Economy & Business</option>
+                        <option value="births">Births of Notable People</option>
+                    </select>
+                    <button onclick="lookupEvent()" class="control-button">SEARCH ARCHIVE</button>
+                </div>
+            </div>
+            
+            <div class="quick-searches-wrapper">
+                <button onclick="searchToday()" class="quick-button">
+                    TODAY'S HISTORY
+                </button>
+                <button onclick="searchRandom()" class="quick-button">
+                    RANDOM DATE
+                </button>
+            </div>
 
-                <select id="daySelector" class="control-input">
-                    <option value="">SELECT DAY</option>
-                </select>
-                
-                <select id="yearFilter" class="control-input">
-                    <option value="all">ALL TIME</option>
-                    <option value="2000">21st Century (2001 - Present)</option>
-                    <option value="1900">20th Century (1901 - 2000)</option>
-                    <option value="1800">19th Century (1801 - 1900)</option>
-                    <option value="before1800">Before 1800</option>
-                </select>
-                
-                <select id="categoryFilter" class="control-input" onchange="lookupEvent()">
-                    <option value="all">FILTER BY CATEGORY (ALL)</option>
-                    <option value="science">Science & Technology</option>
-                    <option value="wars">Wars & Conflicts</option>
-                    <option value="art">Art, Literature & Music</option>
-                    <option value="politics">Politics & Legislation</option>
-                    <option value="disaster">Disasters & Accidents</option>
-                    <option value="sports">Sports & Records</option>
-                    <option value="economy">Economy & Business</option>
-                    <option value="births">Births of Notable People</option>
-                </select>
-                
-                <button onclick="lookupEvent()" class="control-button">SEARCH ARCHIVE</button>
+            <div class="results-area">
+                <h2>Archived Entries</h2>
+                <ul id="eventList" class="event-list">
+                    <li class="event-item placeholder">
+                        <span class="year-label">System:</span> Select a date or click a button above.
+                    </li>
+                </ul>
             </div>
         </div>
         
-        <div class="quick-searches-wrapper">
-            <button onclick="searchToday()" class="quick-button">
-                TODAY'S HISTORY
-            </button>
-            <button onclick="searchRandom()" class="quick-button">
-                RANDOM DATE
-            </button>
+        <div id="searchView" class="hidden-app">
+            <div class="search-controls-wrapper">
+                <p style="padding: 40px; text-align: center;">General Topic Search functionality is not yet built. Please use the Historical Archive for now!</p>
+            </div>
+        </div>
+        
+        <div class="app-footer">
+            Made With ❤️ By Abhishek Sarda
         </div>
 
-        <div class="results-area">
-            <h2>Archived Entries</h2>
-            <ul id="eventList" class="event-list">
-                <li class="event-item placeholder">
-                    <span class="year-label">Note:</span> Select a date or click a button above.
-                </li>
-            </ul>
-        </div>
-    </div>
-    
-    <div class="app-footer">
-        Made With ❤️ By Abhishek Sarda
     </div>
 
     <script src="app.js"></script>
 </body>
 </html>
-
