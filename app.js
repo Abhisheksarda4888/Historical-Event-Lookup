@@ -1,7 +1,8 @@
 // --- 1. CONFIGURATION AND CORE SETUP ---
 
 const API_BASE_URL = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/';
-let currentCategory = 'all'; 
+const WIKI_SEARCH_API = 'https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=';
+const WIKI_PAGE_URL = 'https://en.wikipedia.org/wiki/';
 
 // Mapping of category names to keywords for client-side filtering
 const CATEGORY_KEYWORDS = {
@@ -45,7 +46,7 @@ function updateClock() {
     }
 }
 
-// Function that runs once the "ON THIS DAY" path is selected
+// Function to populate controls AND update the "TODAY'S HISTORY" button text
 function loadDataAndPopulateControls() {
     // Populate Month (1 to 12) and Day (1 to 31) dropdowns
     populateDropdown('monthSelector', 12);
@@ -67,10 +68,6 @@ function loadDataAndPopulateControls() {
         randomButton.innerHTML = `RANDOM DATE<br>
                                  <span>Unlock New History</span>`;
     }
-    
-    // START THE CLOCK TIMER
-    updateClock(); 
-    setInterval(updateClock, 1000); 
 }
 
 // --- NEW PATH SELECTION LOGIC ---
@@ -92,17 +89,19 @@ function selectPath(path) {
         // Initialize the historical controls and clock
         loadDataAndPopulateControls();
     } else if (path === 'search') {
-        // Show the placeholder for the new Topic Search UI
+        // Show the Topic Search UI
         searchView.classList.remove('hidden-app');
         historicalView.classList.add('hidden-app');
-        // If we build the search UI later, its initialization function would go here.
+        // No specific initialization needed for the search view right now
     }
 }
 
 
-// Ensure the modal is shown first (on page load)
+// Ensure the clock starts running immediately on DOM load
 document.addEventListener('DOMContentLoaded', () => {
-    // We do not call loadDataAndPopulateControls until selectPath('historical') is clicked.
+    // Start the clock and its interval as soon as the page structure is available
+    updateClock(); 
+    setInterval(updateClock, 1000); 
 });
 
 
@@ -149,7 +148,7 @@ function applyCategoryFilter(events, category) {
 }
 
 
-// --- 3. FUNCTION TO FETCH, FILTER, AND DISPLAY EVENTS ---
+// --- 3. HISTORICAL LOOKUP FUNCTION ---
 
 async function lookupEvent() {
     const monthSelector = document.getElementById('monthSelector');
@@ -183,10 +182,8 @@ async function lookupEvent() {
         const data = await response.json();
         const rawEvents = data.selected || [];
         
-        // 1. Apply Year Filtering
+        // Apply Filters
         const yearFilteredEvents = applyYearFilter(rawEvents, filterValue);
-        
-        // 2. Apply Category Filtering
         const filteredEvents = applyCategoryFilter(yearFilteredEvents, categoryFilterValue);
 
         eventList.innerHTML = ''; 
@@ -226,7 +223,7 @@ async function lookupEvent() {
 }
 
 
-// --- 4. QUICK SEARCH FUNCTIONS ---
+// --- 4. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS ---
 
 function searchToday() {
     const today = new Date();
@@ -251,4 +248,56 @@ function searchRandom() {
     document.getElementById('daySelector').value = randomDay;
 
     lookupEvent();
+}
+
+async function searchTopic() {
+    const query = document.getElementById('topicSearchInput').value.trim();
+    const resultList = document.getElementById('topicResultList');
+    
+    if (query === "") {
+        resultList.innerHTML = '<li class="event-item placeholder">Please enter a search topic.</li>';
+        return;
+    }
+
+    // Show loading state
+    resultList.innerHTML = `<li class="event-item placeholder">Searching Wikipedia for "${query}"...</li>`;
+    
+    // Wikipedia API requires CORS bypass on client-side requests using '&origin=*'
+    const apiUrl = `${WIKI_SEARCH_API}${encodeURIComponent(query)}&origin=*`;
+
+    try {
+        const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const searchResults = data.query.search || [];
+
+        resultList.innerHTML = ''; // Clear loading message
+
+        if (searchResults.length > 0) {
+            searchResults.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'event-item';
+                
+                // Construct the direct link using the page title
+                const articleUrl = WIKI_PAGE_URL + encodeURIComponent(item.title.replace(/ /g, '_'));
+
+                // Use snippet provided by Wikipedia
+                li.innerHTML = `<a href="${articleUrl}" target="_blank" class="event-link">
+                                    <span class="year-label">${item.title}</span><br>
+                                    ${item.snippet}...
+                                </a>`;
+                resultList.appendChild(li);
+            });
+        } else {
+            resultList.innerHTML = `<li class="event-item placeholder">No results found for "${query}".</li>`;
+        }
+
+    } catch (error) {
+        console.error("Error fetching search results:", error);
+        resultList.innerHTML = `<li class="event-item" style="color: red;">Error accessing Wikipedia Search. (${error.message})</li>`;
+    }
 }
