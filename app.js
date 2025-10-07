@@ -9,13 +9,33 @@ function populateDropdown(selectorId, count, startValue = 1) {
     const selector = document.getElementById(selectorId);
     for (let i = startValue; i <= count; i++) {
         const option = document.createElement('option');
-        // Add a leading zero if the number is less than 10 (e.g., 01, 02)
         const displayValue = i.toString().padStart(2, '0');
-        option.value = displayValue; // Use padded value for setting selection
+        option.value = displayValue; 
         option.textContent = displayValue;
         selector.appendChild(option);
     }
 }
+
+// --- NEW CLOCK FUNCTION ---
+function updateClock() {
+    const now = new Date();
+    
+    // Formatting the Date (dd-mm-yyyy)
+    // We use 'en-GB' locale for dd/mm/yyyy format and then replace '/' with '-'
+    const dateOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    const formattedDate = now.toLocaleDateString('en-GB', dateOptions).replace(/\//g, '-'); 
+    
+    // Formatting the Time (hr:mm:ss IST)
+    const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: 'Asia/Kolkata' };
+    const formattedTime = now.toLocaleTimeString('en-US', timeOptions);
+    
+    // Combine the output and display
+    const clockElement = document.getElementById('realTimeClock');
+    if (clockElement) {
+        clockElement.textContent = `${formattedDate} ${formattedTime} IST`;
+    }
+}
+
 
 // Function to populate controls AND update the "TODAY'S HISTORY" button text
 function loadDataAndPopulateControls() {
@@ -25,14 +45,12 @@ function loadDataAndPopulateControls() {
     // Populate Day (1 to 31)
     populateDropdown('daySelector', 31);
 
-    // --- Update TODAY'S HISTORY button text with the current date ---
+    // Update TODAY'S HISTORY button text with the current date
     const today = new Date();
-    // Format the date professionally (e.g., Oct 7)
     const formattedDate = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(today);
     
     const todayButton = document.querySelector('.quick-searches-wrapper .quick-button:first-child');
     if (todayButton) {
-        // Use innerHTML to inject the two-line structure
         todayButton.innerHTML = `TODAY'S HISTORY<br>
                                  <span>${formattedDate}</span>`;
     }
@@ -43,9 +61,13 @@ function loadDataAndPopulateControls() {
         randomButton.innerHTML = `RANDOM DATE<br>
                                  <span>Unlock New History</span>`;
     }
+    
+    // START THE CLOCK TIMER (UPDATES EVERY SECOND)
+    updateClock(); // Initial run
+    setInterval(updateClock, 1000); // Continuous update every 1000ms
 }
 
-// Load controls when the page loads
+// Load controls and start clock when the page loads
 document.addEventListener('DOMContentLoaded', loadDataAndPopulateControls);
 
 
@@ -106,37 +128,29 @@ async function lookupEvent() {
 }
 
 
-// --- 3. NEW QUICK SEARCH FUNCTIONS (FIXED) ---
+// --- 3. QUICK SEARCH FUNCTIONS ---
 
 function searchToday() {
     const today = new Date();
     const currentMonth = (today.getMonth() + 1).toString().padStart(2, '0');
     const currentDay = today.getDate().toString().padStart(2, '0');
 
-    // Set the dropdown values
     document.getElementById('monthSelector').value = currentMonth;
     document.getElementById('daySelector').value = currentDay;
 
-    // Trigger the main search function
     lookupEvent();
 }
 
 function searchRandom() {
-    // Function to get a random number between min (inclusive) and max (inclusive)
     const getRandomNumber = (min, max) => {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
 
-    // Get a random month (1 to 12) and pad it
     const randomMonth = getRandomNumber(1, 12).toString().padStart(2, '0');
-    
-    // Get a random day (1 to 31) and pad it
     const randomDay = getRandomNumber(1, 31).toString().padStart(2, '0');
 
-    // Set the dropdown values
     document.getElementById('monthSelector').value = randomMonth;
     document.getElementById('daySelector').value = randomDay;
 
-    // Trigger the main search function
     lookupEvent();
 }
