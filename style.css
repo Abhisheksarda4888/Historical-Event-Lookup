@@ -16,7 +16,7 @@ body {
     justify-content: center;
     align-items: flex-start; 
     min-height: 100vh;
-    margin: 20px 10px; /* Added horizontal margin for better mobile view */
+    margin: 20px 10px;
     padding: 0;
 }
 
@@ -121,7 +121,7 @@ header h1 {
 
 .quick-button {
     flex-grow: 1;
-    height: 40px;
+    height: 50px; /* Increased height to accommodate two lines of text */
     background-color: var(--color-background); 
     color: var(--color-primary);
     border: 1px solid var(--color-primary); 
@@ -130,11 +130,22 @@ header h1 {
     text-transform: uppercase;
     border-radius: 4px;
     transition: all 0.2s;
+    line-height: 1.2; /* Allows two lines to fit nicely */
+    white-space: normal; /* Allows text to stack */
+    text-align: center;
+    cursor: pointer;
 }
 
 .quick-button:hover {
     background-color: var(--color-primary);
     color: var(--color-secondary);
+}
+
+.quick-button span {
+    display: block; /* Forces the date/text onto a new line */
+    font-size: 0.85em;
+    font-weight: 400; /* Makes the date/description text less bold */
+    text-transform: none; /* Keeps date/description in normal casing */
 }
 
 
@@ -203,17 +214,17 @@ header h1 {
 /* --- MOBILE RESPONSIVENESS: STACKING LAYOUT --- */
 @media (max-width: 650px) {
     .container {
-        max-width: 95%; /* Adjust max width for very small screens */
-        box-shadow: none; /* Remove large shadow on mobile */
+        max-width: 95%; 
+        box-shadow: none; 
     }
     
     .controls {
-        flex-direction: column; /* Stack month, day, and button vertically */
+        flex-direction: column;
         gap: 10px;
     }
 
     .quick-searches-wrapper {
-        flex-direction: column; /* Stack quick search buttons vertically */
+        flex-direction: column; 
     }
 
     .control-input, .control-button, .quick-button {
@@ -221,7 +232,6 @@ header h1 {
         margin: 0;
     }
 
-    /* Reduce horizontal padding on small screens */
     header, .controls-wrapper, .quick-searches-wrapper, .results-area {
         padding-left: 15px;
         padding-right: 15px;
