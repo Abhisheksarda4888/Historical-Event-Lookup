@@ -1,14 +1,14 @@
 // --- 1. CONFIGURATION AND CORE SETUP ---
 
 const API_BASE_URL = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/';
-let currentCategory = 'all'; 
+let currentCategory = 'all'; // Global variable to track the active category filter
 
 // Mapping of category names to keywords for client-side filtering
 const CATEGORY_KEYWORDS = {
-    'science': ['science', 'discover', 'space', 'astronomy', 'physics', 'invention', 'technology', 'nobel'],
-    'wars': ['war', 'battle', 'army', 'conflict', 'invasion', 'treaty', 'military', 'siege', 'bombing', 'assassin', 'killed'],
-    'art': ['art', 'literature', 'novel', 'painting', 'sculpture', 'music', 'album', 'theater', 'poet', 'author', 'written'],
-    'all': [''], 
+    'science': ['science', 'discover', 'space', 'astronomy', 'physics', 'invention', 'technology', 'nobel', 'experiment'],
+    'wars': ['war', 'battle', 'army', 'conflict', 'invasion', 'treaty', 'military', 'siege', 'bombing', 'assassin', 'killed', 'forces'],
+    'art': ['art', 'literature', 'novel', 'painting', 'sculpture', 'music', 'album', 'theater', 'poet', 'author', 'written', 'book'],
+    'all': [''], // Default: returns ALL events
 };
 
 
@@ -60,7 +60,7 @@ function loadDataAndPopulateControls() {
                                  <span>Unlock New History</span>`;
     }
     
-    // Set 'ALL' button as active by default on load
+    // Set 'ALL' category button as active on load
     const allButton = document.querySelector(`[data-category="all"]`);
     if (allButton) {
         allButton.classList.add('active-category');
@@ -128,7 +128,7 @@ function applyCategoryFilter(events, category) {
     }
 
     return events.filter(item => {
-        // --- FIX: Ensure event text is lowercase for reliable searching ---
+        // FIX: Ensure event text is lowercase for reliable searching
         const eventText = item.text.toLowerCase();
         
         // Check if any keyword is present in the event text
