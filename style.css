@@ -90,12 +90,11 @@ header h1 {
 
 .controls {
     display: flex;
-    flex-wrap: wrap; /* Allows controls to wrap gracefully if necessary */
+    flex-wrap: wrap; 
     gap: 15px;
 }
 
 .control-input, .control-button {
-    /* Updated flex-grow values to ensure controls fit well on one line */
     flex-grow: 1; 
     height: 45px;
     font-family: var(--font-body);
@@ -122,7 +121,7 @@ header h1 {
 }
 
 .control-button {
-    flex-grow: 0; /* Ensures the search button doesn't take up too much space */
+    flex-grow: 0; 
     background-color: var(--color-primary);
     color: var(--color-secondary);
     border: none;
@@ -174,6 +173,43 @@ header h1 {
     font-size: 0.85em;
     font-weight: 400; 
     text-transform: none; 
+}
+
+
+/* --- CATEGORY BUTTON STYLES --- */
+.category-wrapper {
+    padding: 10px 30px;
+    background-color: var(--color-background);
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.category-button {
+    flex-grow: 1;
+    height: 40px; 
+    background-color: var(--color-secondary); 
+    color: #444; 
+    border: 1px solid var(--color-border); 
+    font-size: 0.75em; 
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 4px;
+    transition: all 0.2s;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.category-button:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.active-category {
+    background-color: var(--color-primary);
+    color: var(--color-secondary) !important;
+    border-color: var(--color-primary) !important;
 }
 
 
@@ -271,25 +307,17 @@ header h1 {
         margin-left: 0;
     }
 
-    .controls {
+    .controls, .category-wrapper, .quick-searches-wrapper {
         flex-direction: column;
         gap: 10px;
     }
-
-    .quick-searches-wrapper {
-        flex-direction: column; 
-    }
-
-    .control-input, .control-button, .quick-button {
+    
+    .control-input, .control-button, .quick-button, .category-button {
         width: 100%; 
         margin: 0;
     }
-    /* Ensure the new filter element is full-width on mobile */
-    #yearFilter {
-        width: 100%; 
-    }
 
-    header, .controls-wrapper, .quick-searches-wrapper, .results-area {
+    header, .controls-wrapper, .quick-searches-wrapper, .results-area, .category-wrapper {
         padding-left: 15px;
         padding-right: 15px;
     }
