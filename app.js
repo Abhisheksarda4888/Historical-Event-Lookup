@@ -1,7 +1,15 @@
 // --- 1. CONFIGURATION AND CORE SETUP ---
 
-// The base URL for the Wikipedia API "On This Day" data
 const API_BASE_URL = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/';
+let currentCategory = 'all'; // Global variable to track the active category filter
+
+// Mapping of category names to keywords for client-side filtering
+const CATEGORY_KEYWORDS = {
+    'science': ['science', 'discover', 'space', 'astronomy', 'physics', 'invention', 'technology', 'nobel'],
+    'wars': ['war', 'battle', 'army', 'conflict', 'invasion', 'treaty', 'military', 'siege', 'bombing', 'assassin', 'killed'],
+    'art': ['art', 'literature', 'novel', 'painting', 'sculpture', 'music', 'album', 'theater', 'poet', 'author', 'written'],
+    'all': [''], // Default: returns ALL events
+};
 
 
 // Helper function to dynamically add options to a dropdown
@@ -60,11 +68,31 @@ function loadDataAndPopulateControls() {
     setInterval(updateClock, 1000); 
 }
 
-// Load controls and start clock when the page loads
 document.addEventListener('DOMContentLoaded', loadDataAndPopulateControls);
 
 
-// --- FILTERING LOGIC ---
+// --- NEW CATEGORY FILTER HANDLER ---
+
+// Function called when a category button is clicked
+function setCategory(category) {
+    // 1. Update the global category tracker
+    currentCategory = category;
+    
+    // 2. Update the active button visually (CSS styling)
+    document.querySelectorAll('.category-button').forEach(button => {
+        button.classList.remove('active-category');
+    });
+    const activeButton = document.querySelector(`[data-category="${category}"]`);
+    if (activeButton) {
+        activeButton.classList.add('active-category');
+    }
+    
+    // 3. Trigger a lookup to refresh the results with the new filter
+    lookupEvent(); 
+}
+
+
+// --- 2. FILTERING LOGIC ---
 
 function applyYearFilter(events, filterValue) {
     if (filterValue === 'all') {
@@ -75,13 +103,13 @@ function applyYearFilter(events, filterValue) {
         const year = parseInt(item.year);
         
         switch (filterValue) {
-            case '2000': // 21st Century (2001 - Present)
+            case '2000': 
                 return year >= 2001;
-            case '1900': // 20th Century (1901 - 2000)
+            case '1900': 
                 return year >= 1901 && year <= 2000;
-            case '1800': // 19th Century (1801 - 1900)
+            case '1800': 
                 return year >= 1801 && year <= 1900;
-            case 'before1800': // Events before 1800
+            case 'before1800': 
                 return year <= 1800;
             default:
                 return true;
@@ -89,8 +117,25 @@ function applyYearFilter(events, filterValue) {
     });
 }
 
+function applyCategoryFilter(events, category) {
+    if (category === 'all') {
+        return events;
+    }
 
-// --- 2. FUNCTION TO FETCH, FILTER, AND DISPLAY EVENTS ---
+    const keywords = CATEGORY_KEYWORDS[category];
+    if (!keywords || keywords.length === 0) {
+        return events;
+    }
+
+    return events.filter(item => {
+        const eventText = item.text.toLowerCase();
+        
+        return keywords.some(keyword => eventText.includes(keyword));
+    });
+}
+
+
+// --- 3. FUNCTION TO FETCH, FILTER, AND DISPLAY EVENTS ---
 
 async function lookupEvent() {
     const monthSelector = document.getElementById('monthSelector');
@@ -99,7 +144,7 @@ async function lookupEvent() {
     
     const month = monthSelector.value;
     const day = daySelector.value;
-    const filterValue = yearFilter.value; // Read the filter value
+    const filterValue = yearFilter.value;
     
     const eventList = document.getElementById('eventList');
     
@@ -122,13 +167,15 @@ async function lookupEvent() {
         const data = await response.json();
         const rawEvents = data.selected || [];
         
-        // --- UX FIX: FILTERING ---
-        const filteredEvents = applyYearFilter(rawEvents, filterValue);
+        // 1. Apply Year Filtering
+        const yearFilteredEvents = applyYearFilter(rawEvents, filterValue);
+        
+        // 2. Apply Category Filtering (using the global tracker)
+        const filteredEvents = applyCategoryFilter(yearFilteredEvents, currentCategory);
 
-        eventList.innerHTML = ''; 
+        eventList.innerHTML = ''; // Clear loading message
 
         if (filteredEvents.length > 0) {
-            // Display each event
             filteredEvents.forEach(item => {
                 const li = document.createElement('li');
                 li.className = 'event-item';
@@ -147,11 +194,10 @@ async function lookupEvent() {
                 eventList.appendChild(li);
             });
         } else {
-            eventList.innerHTML = `<li class="event-item placeholder">No events found matching your selected date and filter.</li>`;
+            eventList.innerHTML = `<li class="event-item placeholder">No ${currentCategory} events found matching your selected date and filter.</li>`;
         }
 
-        // --- UX FIX: PRESERVE DROPDOWN STATE AFTER SUCCESSFUL SEARCH ---
-        // This ensures the Month and Day remain selected.
+        // Preserve Dropdown State After Successful Search
         monthSelector.value = month;
         daySelector.value = day;
 
@@ -163,18 +209,15 @@ async function lookupEvent() {
 }
 
 
-// --- 3. QUICK SEARCH FUNCTIONS ---
+// --- 4. QUICK SEARCH FUNCTIONS ---
 
 function searchToday() {
     const today = new Date();
     const currentMonth = (today.getMonth() + 1).toString().padStart(2, '0');
     const currentDay = today.getDate().toString().padStart(2, '0');
 
-    // Set dropdowns and trigger search
     document.getElementById('monthSelector').value = currentMonth;
     document.getElementById('daySelector').value = currentDay;
-    
-    // We do NOT reset the yearFilter here; it uses the default or user's last setting
 
     lookupEvent();
 }
@@ -185,14 +228,10 @@ function searchRandom() {
     };
 
     const randomMonth = getRandomNumber(1, 12).toString().padStart(2, '0');
-    // Note: Choosing a random day between 1 and 28 avoids date validation errors in Feb/30-day months
     const randomDay = getRandomNumber(1, 28).toString().padStart(2, '0');
 
-    // Set dropdowns and trigger search
     document.getElementById('monthSelector').value = randomMonth;
     document.getElementById('daySelector').value = randomDay;
-    
-    // We do NOT reset the yearFilter here; it uses the default or user's last setting
 
     lookupEvent();
 }
