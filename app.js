@@ -1,6 +1,7 @@
 // --- 1. CONFIGURATION AND CORE SETUP ---
 
 const API_BASE_URL = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/';
+let currentCategory = 'all'; 
 
 // Mapping of category names to keywords for client-side filtering
 const CATEGORY_KEYWORDS = {
@@ -12,7 +13,7 @@ const CATEGORY_KEYWORDS = {
     'sports': ['championship', 'olympic', 'world cup', 'game', 'team', 'match', 'record', 'won', 'league', 'final'],
     'economy': ['bank', 'company', 'market', 'stock', 'finance', 'dollar', 'gold', 'currency', 'business', 'founded'],
     'births': ['born'],
-    'all': [''], // Default: returns ALL events
+    'all': [''], 
 };
 
 
@@ -44,7 +45,7 @@ function updateClock() {
     }
 }
 
-// Function to populate controls AND update the "TODAY'S HISTORY" button text
+// Function that runs once the "ON THIS DAY" path is selected
 function loadDataAndPopulateControls() {
     // Populate Month (1 to 12) and Day (1 to 31) dropdowns
     populateDropdown('monthSelector', 12);
@@ -72,7 +73,37 @@ function loadDataAndPopulateControls() {
     setInterval(updateClock, 1000); 
 }
 
-document.addEventListener('DOMContentLoaded', loadDataAndPopulateControls);
+// --- NEW PATH SELECTION LOGIC ---
+function selectPath(path) {
+    const modal = document.getElementById('initialModal');
+    const mainApp = document.getElementById('mainApp');
+    const historicalView = document.getElementById('historicalView');
+    const searchView = document.getElementById('searchView');
+    
+    // 1. Hide the modal and show the main app container
+    modal.classList.add('hidden-app');
+    mainApp.classList.remove('hidden-app');
+    
+    // 2. Determine which specific view to show
+    if (path === 'historical') {
+        // Show the Historical Lookup UI
+        historicalView.classList.remove('hidden-app');
+        searchView.classList.add('hidden-app');
+        // Initialize the historical controls and clock
+        loadDataAndPopulateControls();
+    } else if (path === 'search') {
+        // Show the placeholder for the new Topic Search UI
+        searchView.classList.remove('hidden-app');
+        historicalView.classList.add('hidden-app');
+        // If we build the search UI later, its initialization function would go here.
+    }
+}
+
+
+// Ensure the modal is shown first (on page load)
+document.addEventListener('DOMContentLoaded', () => {
+    // We do not call loadDataAndPopulateControls until selectPath('historical') is clicked.
+});
 
 
 // --- 2. FILTERING LOGIC ---
@@ -111,7 +142,6 @@ function applyCategoryFilter(events, category) {
     }
 
     return events.filter(item => {
-        // FIX: Ensure event text is lowercase for reliable searching
         const eventText = item.text.toLowerCase();
         
         return keywords.some(keyword => eventText.includes(keyword));
@@ -125,12 +155,12 @@ async function lookupEvent() {
     const monthSelector = document.getElementById('monthSelector');
     const daySelector = document.getElementById('daySelector');
     const yearFilter = document.getElementById('yearFilter');
-    const categoryFilter = document.getElementById('categoryFilter'); // NEW: Read category value
+    const categoryFilter = document.getElementById('categoryFilter');
     
     const month = monthSelector.value;
     const day = daySelector.value;
     const filterValue = yearFilter.value;
-    const categoryFilterValue = categoryFilter.value; // Get the selected category
+    const categoryFilterValue = categoryFilter.value;
     
     const eventList = document.getElementById('eventList');
     
@@ -159,7 +189,7 @@ async function lookupEvent() {
         // 2. Apply Category Filtering
         const filteredEvents = applyCategoryFilter(yearFilteredEvents, categoryFilterValue);
 
-        eventList.innerHTML = ''; // Clear loading message
+        eventList.innerHTML = ''; 
 
         if (filteredEvents.length > 0) {
             filteredEvents.forEach(item => {
