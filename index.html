@@ -28,7 +28,15 @@
                 <button onclick="lookupEvent()" class="control-button">SEARCH ARCHIVE</button>
             </div>
         </div>
-
+        
+        <div class="quick-searches-wrapper">
+            <button onclick="searchToday()" class="quick-button">
+                TODAY'S HISTORY
+            </button>
+            <button onclick="searchMyBirthdayMonth()" class="quick-button">
+                MY BIRTH MONTH
+            </button>
+        </div>
         <div class="results-area">
             <h2>Archived Entries</h2>
             <ul id="eventList" class="event-list">
