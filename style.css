@@ -13,8 +13,11 @@ body {
     background-color: var(--color-background);
     color: var(--color-primary);
     display: flex;
+    /* FIX 1: Stacks the main box and footer vertically */
+    flex-direction: column; 
     justify-content: center;
-    align-items: flex-start; 
+    /* FIX 2: Centers all content (box and footer) horizontally */
+    align-items: center; 
     min-height: 100vh;
     margin: 20px 10px;
     padding: 0;
@@ -31,7 +34,7 @@ body {
     overflow: hidden;
 }
 
-/* --- HEADER FLEXBOX STYLES (NEW) --- */
+/* --- HEADER FLEXBOX STYLES --- */
 header {
     background-color: var(--color-secondary);
     color: var(--color-primary);
@@ -41,8 +44,8 @@ header {
 
 .header-content {
     display: flex;
-    justify-content: space-between; /* Pushes left and right content to opposite sides */
-    align-items: center; /* Vertically centers the clock with the title */
+    justify-content: space-between; 
+    align-items: center; 
 }
 
 .header-left {
@@ -51,7 +54,6 @@ header {
 
 .header-right {
     text-align: right;
-    /* Small margin to separate it from the title on desktop */
     margin-left: 15px; 
 }
 
@@ -61,7 +63,7 @@ header {
     font-size: 0.85em;
     font-weight: 700;
     color: #444; 
-    white-space: nowrap; /* Ensures the date/time stays on one line */
+    white-space: nowrap; 
 }
 
 /* Header Text */
@@ -235,6 +237,22 @@ header h1 {
     color: #444444; 
 }
 
+/* --- APP FOOTER STYLES (FIXED) --- */
+.app-footer {
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 0.9em;
+    font-weight: 400;
+    color: #444;
+    
+    /* FIX: Constrain its width to match the main container so it centers properly */
+    width: 100%;
+    max-width: 650px; 
+    
+    margin-top: 20px; 
+    padding: 10px 0;
+}
+
 
 /* --- MOBILE RESPONSIVENESS --- */
 @media (max-width: 650px) {
@@ -244,7 +262,7 @@ header h1 {
     }
     
     .header-content {
-        flex-direction: column; /* Stacks header elements vertically */
+        flex-direction: column; 
         align-items: flex-start;
     }
     .header-right {
@@ -272,17 +290,3 @@ header h1 {
         padding-right: 15px;
     }
 }
-
-/* --- APP FOOTER STYLES (NEW) --- */
-.app-footer {
-    text-align: center; /* Centers the text */
-    font-family: var(--font-body);
-    font-size: 0.9em;
-    font-weight: 400;
-    color: #444; /* Dark gray for a subtle look */
-    
-    /* Spacing below the main box */
-    margin-top: 20px; 
-    padding: 10px 0;
-}
-/* All existing CSS remains above this block. */
