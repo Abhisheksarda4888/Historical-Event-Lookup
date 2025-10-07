@@ -13,11 +13,11 @@ body {
     background-color: var(--color-background);
     color: var(--color-primary);
     display: flex;
-    /* FIX 1: Stacks the main box and footer vertically */
+    /* FIX 1: STACKING - Forces main box and footer to stack vertically */
     flex-direction: column; 
-    justify-content: center;
-    /* FIX 2: Centers all content (box and footer) horizontally */
+    /* FIX 2: CENTERING - Centers all stacked items horizontally */
     align-items: center; 
+    justify-content: center;
     min-height: 100vh;
     margin: 20px 10px;
     padding: 0;
@@ -237,7 +237,7 @@ header h1 {
     color: #444444; 
 }
 
-/* --- APP FOOTER STYLES (FIXED) --- */
+/* --- APP FOOTER STYLES (CORRECTED) --- */
 .app-footer {
     text-align: center;
     font-family: var(--font-body);
@@ -245,7 +245,7 @@ header h1 {
     font-weight: 400;
     color: #444;
     
-    /* FIX: Constrain its width to match the main container so it centers properly */
+    /* Constraint its width to match the main container max-width */
     width: 100%;
     max-width: 650px; 
     
