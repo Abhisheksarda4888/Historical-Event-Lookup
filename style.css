@@ -31,15 +31,40 @@ body {
     overflow: hidden;
 }
 
-/* --- HEADER --- */
+/* --- HEADER FLEXBOX STYLES (NEW) --- */
 header {
     background-color: var(--color-secondary);
     color: var(--color-primary);
     padding: 25px 30px 10px;
-    text-align: left;
     border-bottom: 2px solid var(--color-primary);
 }
 
+.header-content {
+    display: flex;
+    justify-content: space-between; /* Pushes left and right content to opposite sides */
+    align-items: center; /* Vertically centers the clock with the title */
+}
+
+.header-left {
+    text-align: left;
+}
+
+.header-right {
+    text-align: right;
+    /* Small margin to separate it from the title on desktop */
+    margin-left: 15px; 
+}
+
+/* Clock Style */
+.real-time-clock {
+    font-family: var(--font-body);
+    font-size: 0.85em;
+    font-weight: 700;
+    color: #444; 
+    white-space: nowrap; /* Ensures the date/time stays on one line */
+}
+
+/* Header Text */
 header h1 {
     font-family: var(--font-heading);
     font-size: 2.2em;
@@ -109,7 +134,7 @@ header h1 {
     box-shadow: 3px 3px 0 #555555;
 }
 
-/* --- NEW QUICK SEARCH STYLES --- */
+/* --- QUICK SEARCH STYLES --- */
 .quick-searches-wrapper {
     padding: 10px 30px 20px;
     background-color: var(--color-secondary);
@@ -121,7 +146,7 @@ header h1 {
 
 .quick-button {
     flex-grow: 1;
-    height: 50px; /* Increased height to accommodate two lines of text */
+    height: 50px; 
     background-color: var(--color-background); 
     color: var(--color-primary);
     border: 1px solid var(--color-primary); 
@@ -130,8 +155,8 @@ header h1 {
     text-transform: uppercase;
     border-radius: 4px;
     transition: all 0.2s;
-    line-height: 1.2; /* Allows two lines to fit nicely */
-    white-space: normal; /* Allows text to stack */
+    line-height: 1.2; 
+    white-space: normal; 
     text-align: center;
     cursor: pointer;
 }
@@ -142,10 +167,10 @@ header h1 {
 }
 
 .quick-button span {
-    display: block; /* Forces the date/text onto a new line */
+    display: block; 
     font-size: 0.85em;
-    font-weight: 400; /* Makes the date/description text less bold */
-    text-transform: none; /* Keeps date/description in normal casing */
+    font-weight: 400; 
+    text-transform: none; 
 }
 
 
@@ -198,7 +223,7 @@ header h1 {
     color: #999;
 }
 
-/* --- NEW STYLE: Link Appearance for Events --- */
+/* --- Link Appearance for Events --- */
 .event-link {
     text-decoration: none; 
     color: inherit; 
@@ -211,13 +236,23 @@ header h1 {
 }
 
 
-/* --- MOBILE RESPONSIVENESS: STACKING LAYOUT --- */
+/* --- MOBILE RESPONSIVENESS --- */
 @media (max-width: 650px) {
     .container {
         max-width: 95%; 
         box-shadow: none; 
     }
     
+    .header-content {
+        flex-direction: column; /* Stacks header elements vertically */
+        align-items: flex-start;
+    }
+    .header-right {
+        margin-top: 5px; 
+        text-align: left;
+        margin-left: 0;
+    }
+
     .controls {
         flex-direction: column;
         gap: 10px;
