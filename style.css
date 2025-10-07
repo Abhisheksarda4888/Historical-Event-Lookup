@@ -13,6 +13,7 @@ body {
     background-color: var(--color-background);
     color: var(--color-primary);
     display: flex;
+    /* FIX: Ensures vertical stacking and horizontal centering */
     flex-direction: column; 
     align-items: center; 
     justify-content: center;
@@ -175,46 +176,6 @@ header h1 {
     text-transform: none; 
 }
 
-
-/* --- CATEGORY BUTTON STYLES (FIXED AESTHETICS) --- */
-.category-wrapper {
-    padding: 10px 30px;
-    background-color: var(--color-background); /* Use the light background for separation */
-    display: flex;
-    justify-content: flex-start; /* Align buttons to the LEFT */
-    gap: 12px;
-    border-bottom: 1px solid var(--color-border);
-    border-top: 1px solid var(--color-border);
-}
-
-.category-button {
-    padding: 8px 15px; 
-    background-color: var(--color-secondary); 
-    color: #444; /* Default gray text */
-    border: 1px solid #777777; /* Softer border */
-    font-family: var(--font-body);
-    font-size: 0.8em;
-    font-weight: 700;
-    text-transform: uppercase;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s;
-    flex-grow: 0;
-}
-
-.category-button:hover {
-    background-color: #EEEEEE; 
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-}
-
-.active-category {
-    background-color: var(--color-primary); /* Solid BLACK fill when active */
-    color: var(--color-secondary) !important; /* White text when active */
-    border-color: var(--color-primary) !important; 
-    box-shadow: 2px 2px 0 #555555; 
-}
-
 /* --- RESULTS AREA --- */
 .results-area {
     padding: 30px;
@@ -283,8 +244,10 @@ header h1 {
     font-size: 0.9em;
     font-weight: 400;
     color: #444;
+    /* Aligns width to main container for perfect centering below the box */
     width: 100%;
     max-width: 650px; 
+    
     margin-top: 20px; 
     padding: 10px 0;
 }
@@ -307,17 +270,17 @@ header h1 {
         margin-left: 0;
     }
 
-    .controls, .category-wrapper, .quick-searches-wrapper {
+    .controls, .quick-searches-wrapper {
         flex-direction: column;
         gap: 10px;
     }
     
-    .control-input, .control-button, .quick-button, .category-button {
+    .control-input, .control-button, .quick-button {
         width: 100%; 
         margin: 0;
     }
 
-    header, .controls-wrapper, .quick-searches-wrapper, .results-area, .category-wrapper {
+    header, .controls-wrapper, .quick-searches-wrapper, .results-area {
         padding-left: 15px;
         padding-right: 15px;
     }
