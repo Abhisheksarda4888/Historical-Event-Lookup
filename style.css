@@ -8,12 +8,16 @@
     --font-body: 'Roboto Mono', monospace; 
 }
 
+/* --- GLOBAL STYLES --- */
+.hidden-app {
+    display: none !important;
+}
+
 body {
     font-family: var(--font-body);
     background-color: var(--color-background);
     color: var(--color-primary);
     display: flex;
-    /* FIX: Ensures vertical stacking and horizontal centering */
     flex-direction: column; 
     align-items: center; 
     justify-content: center;
@@ -33,7 +37,63 @@ body {
     overflow: hidden;
 }
 
-/* --- HEADER FLEXBOX STYLES --- */
+/* --- MODAL STYLES --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--color-background);
+    color: var(--color-primary);
+    padding: 40px;
+    border: 3px solid var(--color-primary);
+    box-shadow: 10px 10px 0 var(--color-primary);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.modal-title {
+    font-family: var(--font-heading);
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.modal-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.modal-btn {
+    padding: 15px 20px;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    border: 2px solid var(--color-primary);
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: all 0.2s;
+}
+
+.modal-btn:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+}
+
+
+/* --- HEADER FLEXBOX STYLES (Existing) --- */
 header {
     background-color: var(--color-secondary);
     color: var(--color-primary);
@@ -82,7 +142,7 @@ header h1 {
     font-family: var(--font-body);
 }
 
-/* --- CONTROLS SECTION --- */
+/* --- CONTROLS SECTION (Existing) --- */
 .controls-wrapper {
     padding: 20px 30px;
     background-color: #f2f2f2;
@@ -137,7 +197,7 @@ header h1 {
     box-shadow: 3px 3px 0 #555555;
 }
 
-/* --- QUICK SEARCH STYLES --- */
+/* --- QUICK SEARCH STYLES (Existing) --- */
 .quick-searches-wrapper {
     padding: 10px 30px 20px;
     background-color: var(--color-secondary);
@@ -176,7 +236,8 @@ header h1 {
     text-transform: none; 
 }
 
-/* --- RESULTS AREA --- */
+
+/* --- RESULTS AREA (Existing) --- */
 .results-area {
     padding: 30px;
     text-align: left;
@@ -225,7 +286,7 @@ header h1 {
     color: #999;
 }
 
-/* --- Link Appearance for Events --- */
+/* --- Link Appearance for Events (Existing) --- */
 .event-link {
     text-decoration: none; 
     color: inherit; 
@@ -237,23 +298,21 @@ header h1 {
     color: #444444; 
 }
 
-/* --- APP FOOTER STYLES --- */
+/* --- APP FOOTER STYLES (Existing) --- */
 .app-footer {
     text-align: center;
     font-family: var(--font-body);
     font-size: 0.9em;
     font-weight: 400;
     color: #444;
-    /* Aligns width to main container for perfect centering below the box */
     width: 100%;
     max-width: 650px; 
-    
     margin-top: 20px; 
     padding: 10px 0;
 }
 
 
-/* --- MOBILE RESPONSIVENESS --- */
+/* --- MOBILE RESPONSIVENESS (Existing) --- */
 @media (max-width: 650px) {
     .container {
         max-width: 95%; 
