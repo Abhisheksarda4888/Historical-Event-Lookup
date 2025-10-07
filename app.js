@@ -1,13 +1,17 @@
 // --- 1. CONFIGURATION AND CORE SETUP ---
 
 const API_BASE_URL = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/';
-let currentCategory = 'all'; // Global variable to track the active category filter
 
 // Mapping of category names to keywords for client-side filtering
 const CATEGORY_KEYWORDS = {
     'science': ['science', 'discover', 'space', 'astronomy', 'physics', 'invention', 'technology', 'nobel', 'experiment'],
     'wars': ['war', 'battle', 'army', 'conflict', 'invasion', 'treaty', 'military', 'siege', 'bombing', 'assassin', 'killed', 'forces'],
     'art': ['art', 'literature', 'novel', 'painting', 'sculpture', 'music', 'album', 'theater', 'poet', 'author', 'written', 'book'],
+    'politics': ['president', 'prime minister', 'elected', 'legislation', 'government', 'signed', 'vote', 'republic', 'state', 'cabinet'],
+    'disaster': ['earthquake', 'flood', 'hurricane', 'volcano', 'disaster', 'accident', 'crash', 'sinks', 'storm'],
+    'sports': ['championship', 'olympic', 'world cup', 'game', 'team', 'match', 'record', 'won', 'league', 'final'],
+    'economy': ['bank', 'company', 'market', 'stock', 'finance', 'dollar', 'gold', 'currency', 'business', 'founded'],
+    'births': ['born'],
     'all': [''], // Default: returns ALL events
 };
 
@@ -24,7 +28,7 @@ function populateDropdown(selectorId, count, startValue = 1) {
     }
 }
 
-// Function to update the clock display
+// Function to update the clock display (dd-mm-yyyy hr:mm:ss IST)
 function updateClock() {
     const now = new Date();
     
@@ -42,9 +46,11 @@ function updateClock() {
 
 // Function to populate controls AND update the "TODAY'S HISTORY" button text
 function loadDataAndPopulateControls() {
+    // Populate Month (1 to 12) and Day (1 to 31) dropdowns
     populateDropdown('monthSelector', 12);
     populateDropdown('daySelector', 31);
 
+    // Update TODAY'S HISTORY button text
     const today = new Date();
     const formattedDate = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(today);
     
@@ -54,42 +60,19 @@ function loadDataAndPopulateControls() {
                                  <span>${formattedDate}</span>`;
     }
     
+    // Update RANDOM DATE button text
     const randomButton = document.querySelector('.quick-searches-wrapper .quick-button:last-child');
     if (randomButton) {
         randomButton.innerHTML = `RANDOM DATE<br>
                                  <span>Unlock New History</span>`;
     }
     
-    // Set 'ALL' category button as active on load
-    const allButton = document.querySelector(`[data-category="all"]`);
-    if (allButton) {
-        allButton.classList.add('active-category');
-    }
-
+    // START THE CLOCK TIMER
     updateClock(); 
     setInterval(updateClock, 1000); 
 }
 
 document.addEventListener('DOMContentLoaded', loadDataAndPopulateControls);
-
-
-// --- NEW CATEGORY FILTER HANDLER ---
-
-function setCategory(category) {
-    currentCategory = category;
-    
-    // Update the active button visually
-    document.querySelectorAll('.category-button').forEach(button => {
-        button.classList.remove('active-category');
-    });
-    const activeButton = document.querySelector(`[data-category="${category}"]`);
-    if (activeButton) {
-        activeButton.classList.add('active-category');
-    }
-    
-    // Trigger a lookup to refresh the results with the new filter
-    lookupEvent(); 
-}
 
 
 // --- 2. FILTERING LOGIC ---
@@ -131,7 +114,6 @@ function applyCategoryFilter(events, category) {
         // FIX: Ensure event text is lowercase for reliable searching
         const eventText = item.text.toLowerCase();
         
-        // Check if any keyword is present in the event text
         return keywords.some(keyword => eventText.includes(keyword));
     });
 }
@@ -143,10 +125,12 @@ async function lookupEvent() {
     const monthSelector = document.getElementById('monthSelector');
     const daySelector = document.getElementById('daySelector');
     const yearFilter = document.getElementById('yearFilter');
+    const categoryFilter = document.getElementById('categoryFilter'); // NEW: Read category value
     
     const month = monthSelector.value;
     const day = daySelector.value;
     const filterValue = yearFilter.value;
+    const categoryFilterValue = categoryFilter.value; // Get the selected category
     
     const eventList = document.getElementById('eventList');
     
@@ -172,8 +156,8 @@ async function lookupEvent() {
         // 1. Apply Year Filtering
         const yearFilteredEvents = applyYearFilter(rawEvents, filterValue);
         
-        // 2. Apply Category Filtering (using the global tracker)
-        const filteredEvents = applyCategoryFilter(yearFilteredEvents, currentCategory);
+        // 2. Apply Category Filtering
+        const filteredEvents = applyCategoryFilter(yearFilteredEvents, categoryFilterValue);
 
         eventList.innerHTML = ''; // Clear loading message
 
@@ -196,13 +180,14 @@ async function lookupEvent() {
                 eventList.appendChild(li);
             });
         } else {
-            eventList.innerHTML = `<li class="event-item placeholder">No ${currentCategory} events found matching your selected date and filter.</li>`;
+            eventList.innerHTML = `<li class="event-item placeholder">No ${categoryFilterValue} events found matching your selected date and filter.</li>`;
         }
 
         // Preserve Dropdown State After Successful Search
         monthSelector.value = month;
         daySelector.value = day;
-
+        yearFilter.value = filterValue;
+        categoryFilter.value = categoryFilterValue;
 
     } catch (error) {
         console.error("Error fetching Wikipedia data:", error);
