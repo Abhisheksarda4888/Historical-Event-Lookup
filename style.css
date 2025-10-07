@@ -4,7 +4,7 @@
     --color-secondary: #FFFFFF;
     --color-background: #F8F8F8;
     --color-border: #BBBBBB;
-    --font-heading: 'Playfair Display', serif; 
+    --font-heading: 'Playfair Display', serif;
     --font-body: 'Roboto Mono', monospace; 
 }
 
@@ -16,7 +16,7 @@ body {
     justify-content: center;
     align-items: flex-start; 
     min-height: 100vh;
-    margin: 40px 0; 
+    margin: 20px 10px; /* Added horizontal margin for better mobile view */
     padding: 0;
 }
 
@@ -65,7 +65,7 @@ header h1 {
 
 .controls {
     display: flex;
-    gap: 15px; 
+    gap: 15px;
 }
 
 .control-input, .control-button {
@@ -106,8 +106,37 @@ header h1 {
 .control-button:hover {
     background-color: var(--color-secondary);
     color: var(--color-primary);
-    box-shadow: 3px 3px 0 #555555; 
+    box-shadow: 3px 3px 0 #555555;
 }
+
+/* --- NEW QUICK SEARCH STYLES --- */
+.quick-searches-wrapper {
+    padding: 10px 30px 20px;
+    background-color: var(--color-secondary);
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.quick-button {
+    flex-grow: 1;
+    height: 40px;
+    background-color: var(--color-background); 
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary); 
+    font-size: 0.85em;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.quick-button:hover {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+}
+
 
 /* --- RESULTS AREA --- */
 .results-area {
@@ -120,7 +149,7 @@ header h1 {
     font-size: 1.5em;
     margin-top: 0;
     margin-bottom: 20px;
-    border-bottom: 1px dashed var(--color-border); 
+    border-bottom: 1px dashed var(--color-border);
     padding-bottom: 10px;
     color: #444;
 }
@@ -136,13 +165,14 @@ header h1 {
     margin-bottom: 15px;
     padding: 15px;
     border: 1px solid var(--color-border);
-    border-left: 5px solid var(--color-primary); 
+    border-left: 5px solid var(--color-primary);
     font-size: 0.95em;
     line-height: 1.6;
+    transition: box-shadow 0.2s;
 }
 
 .event-item:hover {
-    border-left-color: #333333; 
+    border-left-color: #333333;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -155,18 +185,45 @@ header h1 {
 
 .placeholder {
     color: #999;
-
 }
 
 /* --- NEW STYLE: Link Appearance for Events --- */
 .event-link {
-    text-decoration: none; /* Removes the underline */
-    color: inherit; /* Inherits the black text color */
-    display: block; /* Makes the entire list item block clickable */
+    text-decoration: none; 
+    color: inherit; 
+    display: block; 
     transition: color 0.2s ease;
 }
 
-/* Add a visual cue when the user hovers over the clickable event */
 .event-link:hover {
-    color: #444444; /* Dark gray color on hover */
+    color: #444444; 
+}
+
+
+/* --- MOBILE RESPONSIVENESS: STACKING LAYOUT --- */
+@media (max-width: 650px) {
+    .container {
+        max-width: 95%; /* Adjust max width for very small screens */
+        box-shadow: none; /* Remove large shadow on mobile */
+    }
+    
+    .controls {
+        flex-direction: column; /* Stack month, day, and button vertically */
+        gap: 10px;
+    }
+
+    .quick-searches-wrapper {
+        flex-direction: column; /* Stack quick search buttons vertically */
+    }
+
+    .control-input, .control-button, .quick-button {
+        width: 100%; 
+        margin: 0;
+    }
+
+    /* Reduce horizontal padding on small screens */
+    header, .controls-wrapper, .quick-searches-wrapper, .results-area {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 }
