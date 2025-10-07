@@ -1,14 +1,14 @@
 // --- 1. CONFIGURATION AND CORE SETUP ---
 
 const API_BASE_URL = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/';
-let currentCategory = 'all'; // Global variable to track the active category filter
+let currentCategory = 'all'; 
 
 // Mapping of category names to keywords for client-side filtering
 const CATEGORY_KEYWORDS = {
     'science': ['science', 'discover', 'space', 'astronomy', 'physics', 'invention', 'technology', 'nobel'],
     'wars': ['war', 'battle', 'army', 'conflict', 'invasion', 'treaty', 'military', 'siege', 'bombing', 'assassin', 'killed'],
     'art': ['art', 'literature', 'novel', 'painting', 'sculpture', 'music', 'album', 'theater', 'poet', 'author', 'written'],
-    'all': [''], // Default: returns ALL events
+    'all': [''], 
 };
 
 
@@ -42,11 +42,9 @@ function updateClock() {
 
 // Function to populate controls AND update the "TODAY'S HISTORY" button text
 function loadDataAndPopulateControls() {
-    // Populate Month (1 to 12) and Day (1 to 31) dropdowns
     populateDropdown('monthSelector', 12);
     populateDropdown('daySelector', 31);
 
-    // Update TODAY'S HISTORY button text
     const today = new Date();
     const formattedDate = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(today);
     
@@ -56,14 +54,18 @@ function loadDataAndPopulateControls() {
                                  <span>${formattedDate}</span>`;
     }
     
-    // Update RANDOM DATE button text
     const randomButton = document.querySelector('.quick-searches-wrapper .quick-button:last-child');
     if (randomButton) {
         randomButton.innerHTML = `RANDOM DATE<br>
                                  <span>Unlock New History</span>`;
     }
     
-    // START THE CLOCK TIMER
+    // Set 'ALL' button as active by default on load
+    const allButton = document.querySelector(`[data-category="all"]`);
+    if (allButton) {
+        allButton.classList.add('active-category');
+    }
+
     updateClock(); 
     setInterval(updateClock, 1000); 
 }
@@ -73,12 +75,10 @@ document.addEventListener('DOMContentLoaded', loadDataAndPopulateControls);
 
 // --- NEW CATEGORY FILTER HANDLER ---
 
-// Function called when a category button is clicked
 function setCategory(category) {
-    // 1. Update the global category tracker
     currentCategory = category;
     
-    // 2. Update the active button visually (CSS styling)
+    // Update the active button visually
     document.querySelectorAll('.category-button').forEach(button => {
         button.classList.remove('active-category');
     });
@@ -87,7 +87,7 @@ function setCategory(category) {
         activeButton.classList.add('active-category');
     }
     
-    // 3. Trigger a lookup to refresh the results with the new filter
+    // Trigger a lookup to refresh the results with the new filter
     lookupEvent(); 
 }
 
@@ -128,8 +128,10 @@ function applyCategoryFilter(events, category) {
     }
 
     return events.filter(item => {
+        // --- FIX: Ensure event text is lowercase for reliable searching ---
         const eventText = item.text.toLowerCase();
         
+        // Check if any keyword is present in the event text
         return keywords.some(keyword => eventText.includes(keyword));
     });
 }
@@ -148,7 +150,7 @@ async function lookupEvent() {
     
     const eventList = document.getElementById('eventList');
     
-    eventList.innerHTML = '<li class="event-item placeholder">Fetching data from Wikipedia...</li>'; 
+    eventList.innerHTML = `<li class="event-item placeholder">Fetching data for ${month}-${day}...</li>`; 
 
     if (!month || !day) {
         eventList.innerHTML = '<li class="event-item placeholder">Please select both a Month and a Day.</li>';
