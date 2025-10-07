@@ -11,19 +11,38 @@ function populateDropdown(selectorId, count, startValue = 1) {
         const option = document.createElement('option');
         // Add a leading zero if the number is less than 10 (e.g., 01, 02)
         const displayValue = i.toString().padStart(2, '0');
-        option.value = i;
+        option.value = displayValue; // Use padded value for setting selection
         option.textContent = displayValue;
         selector.appendChild(option);
     }
 }
 
-// Populate the controls when the page loads
+// Function to populate controls AND update the "TODAY'S HISTORY" button text
 function loadDataAndPopulateControls() {
     // Populate Month (1 to 12)
     populateDropdown('monthSelector', 12);
     
     // Populate Day (1 to 31)
     populateDropdown('daySelector', 31);
+
+    // --- Update TODAY'S HISTORY button text with the current date ---
+    const today = new Date();
+    // Format the date professionally (e.g., Oct 7)
+    const formattedDate = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(today);
+    
+    const todayButton = document.querySelector('.quick-searches-wrapper .quick-button:first-child');
+    if (todayButton) {
+        // Use innerHTML to inject the two-line structure
+        todayButton.innerHTML = `TODAY'S HISTORY<br>
+                                 <span>${formattedDate}</span>`;
+    }
+    
+    // Update RANDOM DATE button text
+    const randomButton = document.querySelector('.quick-searches-wrapper .quick-button:last-child');
+    if (randomButton) {
+        randomButton.innerHTML = `RANDOM DATE<br>
+                                 <span>Unlock New History</span>`;
+    }
 }
 
 // Load controls when the page loads
@@ -37,16 +56,13 @@ async function lookupEvent() {
     const day = document.getElementById('daySelector').value;
     const eventList = document.getElementById('eventList');
     
-    // Clear previous results and show loading message
     eventList.innerHTML = '<li class="event-item placeholder">Fetching data from Wikipedia...</li>'; 
 
-    // Validation 
     if (!month || !day) {
         eventList.innerHTML = '<li class="event-item placeholder">Please select both a Month and a Day.</li>';
         return;
     }
     
-    // Construct the API URL
     const apiUrl = `${API_BASE_URL}${month}/${day}`;
 
     try {
@@ -59,38 +75,27 @@ async function lookupEvent() {
         const data = await response.json();
         const events = data.selected || [];
         
-        eventList.innerHTML = ''; // Clear loading message
+        eventList.innerHTML = ''; 
 
         if (events.length > 0) {
-            // Display each event
             events.forEach(item => {
                 const li = document.createElement('li');
                 li.className = 'event-item';
                 
-                // --- MODIFICATION START: CREATE CLICKABLE LINK ---
-                
-                // Wikipedia provides a link to the main page related to the event
                 const articleLink = item.pages && item.pages.length > 0 ? item.pages[0].content_urls.desktop.page : null;
-                
-                // Create the text content (Year: Description)
-                const eventText = `${item.year}: ${item.text}`;
+                const eventText = `${item.text}`;
                 
                 if (articleLink) {
-                    // If a link exists, wrap the entire content in a clickable <a> tag
                     li.innerHTML = `<a href="${articleLink}" target="_blank" class="event-link">
-                                        <span class="year-label">${item.year}:</span> ${item.text}
+                                        <span class="year-label">${item.year}:</span> ${eventText}
                                     </a>`;
                 } else {
-                    // If no specific article link is found, display as plain text
-                    li.innerHTML = `<span class="year-label">${item.year}:</span> ${item.text} (Link Not Found)`;
+                    li.innerHTML = `<span class="year-label">${item.year}:</span> ${eventText}`;
                 }
-                
-                // --- MODIFICATION END ---
                 
                 eventList.appendChild(li);
             });
         } else {
-            // No results found
             eventList.innerHTML = '<li class="event-item placeholder">No major historical events found for this date.</li>';
         }
 
@@ -98,4 +103,40 @@ async function lookupEvent() {
         console.error("Error fetching Wikipedia data:", error);
         eventList.innerHTML = `<li class="event-item" style="color: red;">Error accessing Wikipedia data. (${error.message})</li>`;
     }
+}
+
+
+// --- 3. NEW QUICK SEARCH FUNCTIONS (FIXED) ---
+
+function searchToday() {
+    const today = new Date();
+    const currentMonth = (today.getMonth() + 1).toString().padStart(2, '0');
+    const currentDay = today.getDate().toString().padStart(2, '0');
+
+    // Set the dropdown values
+    document.getElementById('monthSelector').value = currentMonth;
+    document.getElementById('daySelector').value = currentDay;
+
+    // Trigger the main search function
+    lookupEvent();
+}
+
+function searchRandom() {
+    // Function to get a random number between min (inclusive) and max (inclusive)
+    const getRandomNumber = (min, max) => {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+
+    // Get a random month (1 to 12) and pad it
+    const randomMonth = getRandomNumber(1, 12).toString().padStart(2, '0');
+    
+    // Get a random day (1 to 31) and pad it
+    const randomDay = getRandomNumber(1, 31).toString().padStart(2, '0');
+
+    // Set the dropdown values
+    document.getElementById('monthSelector').value = randomMonth;
+    document.getElementById('daySelector').value = randomDay;
+
+    // Trigger the main search function
+    lookupEvent();
 }
