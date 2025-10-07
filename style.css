@@ -272,3 +272,17 @@ header h1 {
         padding-right: 15px;
     }
 }
+
+/* --- APP FOOTER STYLES (NEW) --- */
+.app-footer {
+    text-align: center; /* Centers the text */
+    font-family: var(--font-body);
+    font-size: 0.9em;
+    font-weight: 400;
+    color: #444; /* Dark gray for a subtle look */
+    
+    /* Spacing below the main box */
+    margin-top: 20px; 
+    padding: 10px 0;
+}
+/* All existing CSS remains above this block. */
