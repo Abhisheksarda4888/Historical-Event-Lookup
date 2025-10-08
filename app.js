@@ -70,13 +70,52 @@ function loadDataAndPopulateControls() {
     }
 }
 
-// --- NEW NAVIGATION LOGIC ---
+// --- NEW PROFILE & NAVIGATION LOGIC ---
+
+function checkUserStatus() {
+    // 1. Check if the user's name is saved in the browser's Local Storage
+    const userName = localStorage.getItem('archiveUserName');
+    const registrationForm = document.getElementById('registrationForm');
+    const pathSelection = document.getElementById('pathSelection');
+    const welcomeHeader = document.getElementById('welcomeHeader');
+
+    if (userName) {
+        // User exists: Show personalized greeting and path selection
+        registrationForm.classList.add('hidden-app');
+        pathSelection.classList.remove('hidden-app');
+        welcomeHeader.textContent = `WELCOME BACK, ${userName.toUpperCase()}`;
+        
+    } else {
+        // New user: Show registration form
+        registrationForm.classList.remove('hidden-app');
+        pathSelection.classList.add('hidden-app');
+    }
+}
+
+function createUserProfile() {
+    const nameInput = document.getElementById('userNameInput');
+    const newName = nameInput.value.trim();
+
+    if (newName.length < 2) {
+        alert("Please enter a valid name.");
+        return;
+    }
+
+    // 1. Save the name to the browser's Local Storage
+    localStorage.setItem('archiveUserName', newName);
+
+    // 2. Refresh the modal view to show the personalized path selection
+    checkUserStatus();
+}
 
 // Function to show the initial decision modal (used by the back button)
 function showModal() {
     const modal = document.getElementById('initialModal');
     const mainApp = document.getElementById('mainApp');
     const scrollBtn = document.getElementById('scrollUpBtn');
+
+    // Re-check status before showing modal (in case user cleared storage)
+    checkUserStatus(); 
 
     mainApp.classList.add('hidden-app');
     modal.classList.remove('hidden-app');
@@ -98,7 +137,7 @@ function selectPath(path) {
     if (path === 'historical') {
         historicalView.classList.remove('hidden-app');
         searchView.classList.add('hidden-app');
-        loadDataAndPopulateControls(); // Initialize controls and clock updates
+        loadDataAndPopulateControls(); // Initialize historical controls
     } else if (path === 'search') {
         searchView.classList.remove('hidden-app');
         historicalView.classList.add('hidden-app');
@@ -108,17 +147,8 @@ function selectPath(path) {
     scrollBtn.classList.remove('hidden-app');
 }
 
-// Ensure the clock starts running immediately on DOM load
-document.addEventListener('DOMContentLoaded', () => {
-    // Start the clock interval
-    updateClock(); 
-    setInterval(updateClock, 1000); 
 
-    // Add scroll event listener to show/hide the scroll-up button
-    window.addEventListener('scroll', toggleScrollUpButton);
-});
-
-// --- NEW SCROLL UP LOGIC ---
+// --- SCROLL UP LOGIC ---
 
 // Function to check scroll position and toggle button visibility
 function toggleScrollUpButton() {
@@ -136,7 +166,23 @@ function scrollToTop() {
 }
 
 
-// --- 2. FILTERING LOGIC (Existing) ---
+// --- PAGE INITIALIZATION ---
+
+// Start clock and profile check immediately
+document.addEventListener('DOMContentLoaded', () => {
+    // Start the clock interval
+    updateClock(); 
+    setInterval(updateClock, 1000); 
+    
+    // Check local storage for user profile
+    checkUserStatus(); 
+
+    // Add scroll event listener to show/hide the scroll-up button
+    window.addEventListener('scroll', toggleScrollUpButton);
+});
+
+
+// --- 3. FILTERING LOGIC (Existing) ---
 
 function applyYearFilter(events, filterValue) {
     if (filterValue === 'all') {
@@ -179,7 +225,7 @@ function applyCategoryFilter(events, category) {
 }
 
 
-// --- 3. HISTORICAL LOOKUP FUNCTION (Existing) ---
+// --- 4. HISTORICAL LOOKUP FUNCTION ---
 
 async function lookupEvent() {
     const monthSelector = document.getElementById('monthSelector');
@@ -254,7 +300,7 @@ async function lookupEvent() {
 }
 
 
-// --- 4. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS ---
+// --- 5. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS ---
 
 function searchToday() {
     const today = new Date();
@@ -318,6 +364,7 @@ async function searchTopic() {
                 li.innerHTML = `<a href="${articleUrl}" target="_blank" class="event-link">
                                     <span class="year-label">${item.title}</span><br>
                                     ${item.snippet}...
+                                
                                 </a>`;
                 resultList.appendChild(li);
             });
