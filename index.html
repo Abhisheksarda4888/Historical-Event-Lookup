@@ -12,15 +12,27 @@
 
     <div id="initialModal" class="modal-overlay">
         <div class="modal-content">
-            <h2 class="modal-title">THE CURATED ARCHIVE</h2>
-            <p>Select your research path:</p>
-            <div class="modal-buttons">
-                <button class="modal-btn" onclick="selectPath('historical')">
-                    ON THIS DAY IN HISTORY
+            <div id="registrationForm">
+                <h2 class="modal-title">WELCOME NEW ARCHIVIST</h2>
+                <p>Please enter your name to begin your research journey:</p>
+                
+                <input type="text" id="userNameInput" placeholder="Enter your Name" class="control-input" style="width: 80%; margin-bottom: 20px; text-transform: none;">
+
+                <button class="modal-btn" onclick="createUserProfile()">
+                    START ARCHIVING
                 </button>
-                <button class="modal-btn" onclick="selectPath('search')">
-                    TOPIC SEARCH 
-                </button>
+            </div>
+            
+            <div id="pathSelection" class="hidden-app">
+                <h2 id="welcomeHeader" class="modal-title"></h2> <p>Select your research path:</p>
+                <div class="modal-buttons">
+                    <button class="modal-btn" onclick="selectPath('historical')">
+                        ON THIS DAY IN HISTORY
+                    </button>
+                    <button class="modal-btn" onclick="selectPath('search')">
+                        SEARCH TOPIC
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -33,7 +45,7 @@
                         <i class="fas fa-arrow-left"></i> 
                     </span>
                     <h1>The Curated Archive</h1>
-                    <p class="subtitle">A Curated Archive for Serious Readers</p>
+                    <p class="subtitle">An Archive for Serious Readers</p>
                 </div>
                 <div class="header-right">
                     <div id="realTimeClock" class="real-time-clock">Loading Clock...</div>
@@ -132,4 +144,3 @@
     <script src="app.js"></script>
 </body>
 </html>
-
