@@ -106,7 +106,7 @@ function createUserProfile() {
     // 1. Save the name to the browser's Local Storage
     localStorage.setItem('archiveUserName', newName);
 
-    // 2. Refresh the modal view to show the personalized path selection
+    // 2. Call checkUserStatus to transition the modal
     checkUserStatus(); 
 }
 
@@ -155,14 +155,13 @@ function selectPath(path) {
     scrollBtn.classList.remove('hidden-app');
 }
 
-
 // Ensure the clock starts running immediately on DOM load
 document.addEventListener('DOMContentLoaded', () => {
     // Start the clock interval
     updateClock(); 
     setInterval(updateClock, 1000); 
     
-    // Check local storage for user profile
+    // Check local storage for user profile and show the correct modal view
     checkUserStatus(); 
 
     // Add scroll event listener to show/hide the scroll-up button
@@ -186,7 +185,7 @@ function scrollToTop() {
 }
 
 
-// --- 3. HISTORICAL FILTERING LOGIC (Existing) ---
+// --- 3. HISTORICAL FILTERING LOGIC ---
 
 function applyYearFilter(events, filterValue) {
     if (filterValue === 'all') {
@@ -411,9 +410,6 @@ function clearCountryResults() {
 
 
 // --- 7. GLOBAL UTILITY FUNCTIONS (Country Selector) ---
-let countryList = []; 
-
-const REST_COUNTRIES_API = 'https://restcountries.com/v3.1/all?fields=name,cca2';
 
 // Function to fetch the list of all countries
 async function fetchCountries() {
