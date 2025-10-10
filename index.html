@@ -137,6 +137,16 @@
         
         <div id="countryView" class="hidden-app">
             <div class="search-controls-wrapper">
+                
+                <div class="search-input-group keyword-search-group">
+                    <input type="text" id="keywordSearchInput" placeholder="Search keywords globally (e.g., Nepal government collapse)" class="control-input search-input">
+                    <button onclick="searchKeywords()" class="control-button search-button">
+                        KEYWORD SEARCH
+                    </button>
+                </div>
+                
+                <p style="text-align: center; font-size: 0.85em; color: #555; margin: 15px 0 10px;">— OR —</p>
+                
                 <div class="controls country-controls">
                     
                     <div class="country-selector-wrapper">
@@ -157,8 +167,6 @@
                         <option value="FINANCE & ECONOMY">FINANCE & ECONOMY</option>
                         <option value="POLITICS & GOVT">POLITICS & GOVT</option>
                         <option value="SPORTS & CULTURE">SPORTS & CULTURE</option>
-                        <option value="HISTORY & PAST">HISTORY & PAST EVENTS</option>
-                        <option value="TECHNOLOGY & SCIENCE">TECHNOLOGY & SCIENCE</option>
                         <option value="TRAVEL & SAFETY">TRAVEL & SAFETY</option>
                     </select>
 
