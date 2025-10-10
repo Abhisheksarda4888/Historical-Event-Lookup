@@ -1,9 +1,10 @@
-/* --- ROOT STYLES --- */
+/* --- ROOT STYLES: Defining Variables for Consistency --- */
 :root {
     --color-primary: #000000;
     --color-secondary: #FFFFFF;
     --color-background: #F8F8F8;
     --color-border: #BBBBBB;
+    --color-accent-blue: #4169E1; /* Royal Blue */
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Roboto Mono', monospace; 
 }
@@ -67,7 +68,7 @@ body {
     font-family: var(--font-heading);
     font-size: 1.8em; 
     margin-bottom: 5px;
-    color: #4169E1; /* Royal Blue accent color */
+    color: var(--color-accent-blue); /* Uses the Royal Blue variable */
     text-transform: uppercase;
 }
 
@@ -87,7 +88,7 @@ body {
 
 .modal-btn {
     padding: 15px 20px;
-    background-color: #4169E1; 
+    background-color: var(--color-accent-blue); 
     color: var(--color-secondary);
     border: 3px solid #1A1A1A; 
     border-radius: 8px; 
@@ -103,7 +104,7 @@ body {
     background-color: #1A1A1A; 
     color: var(--color-secondary);
     transform: translateY(-2px); 
-    box-shadow: 6px 6px 0 #4169E1; 
+    box-shadow: 6px 6px 0 var(--color-accent-blue); 
 }
 
 
