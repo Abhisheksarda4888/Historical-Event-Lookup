@@ -4,6 +4,7 @@ const API_BASE_URL = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/select
 const WIKI_SEARCH_API = 'https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=';
 const WIKI_PAGE_URL = 'https://en.wikipedia.org/wiki/';
 const REST_COUNTRIES_API = 'https://restcountries.com/v3.1/all?fields=name,cca2'; 
+const NEWS_PROXY_ENDPOINT = '/api/get-news'; // Vercel function endpoint
 
 // Mapping of category names to keywords for client-side filtering
 const CATEGORY_KEYWORDS = {
@@ -116,7 +117,6 @@ function showModal() {
     const mainApp = document.getElementById('mainApp');
     const scrollBtn = document.getElementById('scrollUpBtn');
 
-    // Re-check status before showing modal
     checkUserStatus(); 
 
     mainApp.classList.add('hidden-app');
@@ -157,14 +157,10 @@ function selectPath(path) {
 
 // Ensure the clock starts running immediately on DOM load
 document.addEventListener('DOMContentLoaded', () => {
-    // Start the clock interval
     updateClock(); 
     setInterval(updateClock, 1000); 
-    
-    // Check local storage for user profile and show the correct modal view
     checkUserStatus(); 
 
-    // Add scroll event listener to show/hide the scroll-up button
     window.addEventListener('scroll', toggleScrollUpButton);
 });
 
@@ -409,7 +405,12 @@ function clearCountryResults() {
 }
 
 
-// --- 7. GLOBAL UTILITY FUNCTIONS (Country Selector) ---
+// --- 7. GLOBAL UTILITY FUNCTIONS (Country Selector/News) ---
+let countryList = []; 
+
+const REST_COUNTRIES_API = 'https://restcountries.com/v3.1/all?fields=name,cca2';
+const NEWS_PROXY_ENDPOINT = '/api/get-news'; // Vercel function endpoint
+
 
 // Function to fetch the list of all countries
 async function fetchCountries() {
@@ -458,11 +459,9 @@ function filterCountries() {
         }
     }
 
-    // Show the list only if matches are found
     if (input.length > 0 && matchesFound) {
         dropdown.classList.remove('hidden-app');
     } else if (input.length === 0) {
-        // Show all if input is empty
         for (let i = 0; i < items.length; i++) { items[i].style.display = 'block'; }
         dropdown.classList.remove('hidden-app');
     } else {
@@ -507,34 +506,46 @@ async function fetchCountryNews() {
 
     resultList.innerHTML = `<li class="event-item placeholder">Searching for LIVE ${category} in ${countryName}...</li>`;
 
-    // --- QUERY FORMULATION (The Placeholder for the secure function) ---
+    // --- EXECUTES SECURE VERCEL PROXY CALL ---
     const searchQuery = `${category} news in ${countryName}`;
     
-    // Placeholder Logic (Simulates an API response)
-    setTimeout(() => {
-        resultList.innerHTML = `
-            <li class="event-item">
-                <span class="year-label">QUERY:</span> ${searchQuery}
-            </li>
-            <li class="event-item" style="border-left-color: orange;">
-                <span class="year-label">STATUS:</span> **Backend Required.** Live news fetching requires a secure API key (Vercel Function).
-            </li>
-            <li class="event-item" style="border-left-color: green;">
-                <span class="year-label">FRONTEND SUCCESS:</span> Your filterable selector and UI are working correctly!
-            </li>
-        `;
-    }, 2000);
+    try {
+        const newsResponse = await fetch(NEWS_PROXY_ENDPOINT, { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: searchQuery })
+        });
+        
+        const newsData = await newsResponse.json();
+
+        resultList.innerHTML = ''; // Clear loading message
+
+        if (newsData.error) {
+            return resultList.innerHTML = `<li class="event-item" style="border-left-color: red;">
+                <span class="year-label">API ERROR:</span> ${newsData.error}
+            </li>`;
+        }
+        
+        const articles = newsData.articles;
+        
+        if (articles && articles.length > 0) {
+            articles.forEach(article => {
+                const li = document.createElement('li');
+                li.className = 'event-item';
+                
+                li.innerHTML = `<a href="${article.url}" target="_blank" class="event-link">
+                                    <span class="year-label">${article.source.name} (${article.publishedAt ? article.publishedAt.substring(0, 10) : 'Date N/A'})</span><br>
+                                    ${article.title}
+                                </a>`;
+                resultList.appendChild(li);
+            });
+        } else {
+            resultList.innerHTML = `<li class="event-item placeholder">No recent news articles found for "${searchQuery}".</li>`;
+        }
+    } catch (error) {
+        console.error("Frontend Fetch Error:", error);
+        resultList.innerHTML = `<li class="event-item" style="border-left-color: red;">
+            <span class="year-label">CONNECTION FAILED:</span> Could not reach the news proxy function. Check Vercel logs.
+        </li>`;
+    }
 }
-
-// Execution starts here
-document.addEventListener('DOMContentLoaded', () => {
-    // Start the clock interval
-    updateClock(); 
-    setInterval(updateClock, 1000); 
-    
-    // Check local storage for user profile and show the correct modal view
-    checkUserStatus(); 
-
-    // Add scroll event listener to show/hide the scroll-up button
-    window.addEventListener('scroll', toggleScrollUpButton);
-});
