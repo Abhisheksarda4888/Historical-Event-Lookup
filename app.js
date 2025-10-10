@@ -96,18 +96,19 @@ function checkUserStatus() {
 }
 
 function createUserProfile() {
+    // 1. Get the input element and its value
     const nameInput = document.getElementById('userNameInput');
-    const newName = nameInput.value.trim();
+    const newName = nameInput ? nameInput.value.trim() : ''; // Use ternary check to prevent crash if element is null
 
     if (newName.length < 2) {
-        alert("Please enter a valid name.");
+        alert("Please enter a valid name (2+ characters).");
         return;
     }
 
-    // 1. Save the name to the browser's Local Storage
+    // 2. Save the name to the browser's Local Storage
     localStorage.setItem('archiveUserName', newName);
 
-    // 2. Call checkUserStatus to transition the modal
+    // 3. Immediately transition the modal to the path selection screen
     checkUserStatus(); 
 }
 
@@ -549,3 +550,4 @@ async function fetchCountryNews() {
         </li>`;
     }
 }
+
