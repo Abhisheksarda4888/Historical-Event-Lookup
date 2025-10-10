@@ -4,7 +4,7 @@ const API_BASE_URL = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/select
 const WIKI_SEARCH_API = 'https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=';
 const WIKI_PAGE_URL = 'https://en.wikipedia.org/wiki/';
 const REST_COUNTRIES_API = 'https://restcountries.com/v3.1/all?fields=name,cca2'; 
-const NEWS_PROXY_ENDPOINT = '/api/get-news'; // Vercel function endpoint
+const NEWS_PROXY_ENDPOINT = '/api/get-news'; 
 
 // Mapping of category names to keywords for client-side filtering
 const CATEGORY_KEYWORDS = {
@@ -19,10 +19,84 @@ const CATEGORY_KEYWORDS = {
     'all': [''], 
 };
 
-let countryList = []; // Stores all fetched countries
+let countryList = []; // CORRECT DECLARATION: ONLY ONCE AT THE TOP
 
+// --- PROFILE & NAVIGATION LOGIC ---
 
-// Helper function to dynamically add options to a dropdown
+function checkUserStatus() {
+    const userName = localStorage.getItem('archiveUserName');
+    const registrationForm = document.getElementById('registrationForm');
+    const pathSelection = document.getElementById('pathSelection');
+    const welcomeHeader = document.getElementById('welcomeHeader');
+
+    if (userName) {
+        registrationForm.classList.add('hidden-app');
+        pathSelection.classList.remove('hidden-app');
+        welcomeHeader.textContent = `WELCOME BACK, ${userName.toUpperCase()}`;
+    } else {
+        registrationForm.classList.remove('hidden-app');
+        pathSelection.classList.add('hidden-app');
+    }
+}
+
+function createUserProfile() {
+    const nameInput = document.getElementById('userNameInput');
+    const newName = nameInput.value.trim();
+
+    if (newName.length < 2) {
+        alert("Please enter a valid name.");
+        return;
+    }
+
+    // 1. Save the name to the browser's Local Storage
+    localStorage.setItem('archiveUserName', newName);
+
+    // 2. Call checkUserStatus to transition the modal
+    checkUserStatus(); 
+}
+
+function showModal() {
+    const modal = document.getElementById('initialModal');
+    const mainApp = document.getElementById('mainApp');
+    const scrollBtn = document.getElementById('scrollUpBtn');
+
+    checkUserStatus(); 
+
+    mainApp.classList.add('hidden-app');
+    modal.classList.remove('hidden-app');
+    scrollBtn.classList.add('hidden-app'); 
+}
+
+function selectPath(path) {
+    const modal = document.getElementById('initialModal');
+    const mainApp = document.getElementById('mainApp');
+    const historicalView = document.getElementById('historicalView');
+    const searchView = document.getElementById('searchView');
+    const countryView = document.getElementById('countryView'); 
+    const scrollBtn = document.getElementById('scrollUpBtn');
+
+    modal.classList.add('hidden-app');
+    mainApp.classList.remove('hidden-app');
+    
+    historicalView.classList.add('hidden-app');
+    searchView.classList.add('hidden-app');
+    countryView.classList.add('hidden-app');
+
+    if (path === 'historical') {
+        historicalView.classList.remove('hidden-app');
+        loadDataAndPopulateControls();
+    } else if (path === 'search') {
+        searchView.classList.remove('hidden-app');
+    } else if (path === 'country') { 
+        countryView.classList.remove('hidden-app');
+        loadCountrySelector();
+    }
+    
+    scrollBtn.classList.remove('hidden-app');
+}
+
+// --- CLOCK & INITIALIZATION FUNCTIONS ---
+
 function populateDropdown(selectorId, count, startValue = 1) {
     const selector = document.getElementById(selectorId);
     for (let i = startValue; i <= count; i++) {
@@ -34,7 +108,6 @@ function populateDropdown(selectorId, count, startValue = 1) {
     }
 }
 
-// Function to update the clock display (dd-mm-yyyy hr:mm:ss IST)
 function updateClock() {
     const now = new Date();
     
@@ -50,13 +123,10 @@ function updateClock() {
     }
 }
 
-// Function to populate controls AND update the "TODAY'S HISTORY" button text
 function loadDataAndPopulateControls() {
-    // Populate Month (1 to 12) and Day (1 to 31) dropdowns
     populateDropdown('monthSelector', 12);
     populateDropdown('daySelector', 31);
 
-    // Update TODAY'S HISTORY button text
     const today = new Date();
     const formattedDate = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(today);
     
@@ -66,7 +136,6 @@ function loadDataAndPopulateControls() {
                                  <span>${formattedDate}</span>`;
     }
     
-    // Update RANDOM DATE button text
     const randomButton = document.querySelector('.quick-searches-wrapper .quick-button:last-child');
     if (randomButton) {
         randomButton.innerHTML = `RANDOM DATE<br>
@@ -74,97 +143,14 @@ function loadDataAndPopulateControls() {
     }
 }
 
-// --- NEW PROFILE & NAVIGATION LOGIC ---
-
-function checkUserStatus() {
-    const userName = localStorage.getItem('archiveUserName');
-    const registrationForm = document.getElementById('registrationForm');
-    const pathSelection = document.getElementById('pathSelection');
-    const welcomeHeader = document.getElementById('welcomeHeader');
-
-    if (userName) {
-        // User exists: Show personalized greeting and path selection
-        registrationForm.classList.add('hidden-app');
-        pathSelection.classList.remove('hidden-app');
-        welcomeHeader.textContent = `WELCOME BACK, ${userName.toUpperCase()}`;
-        
-    } else {
-        // New user: Show registration form
-        registrationForm.classList.remove('hidden-app');
-        pathSelection.classList.add('hidden-app');
-    }
-}
-
-function createUserProfile() {
-    // 1. Get the input element and its value
-    const nameInput = document.getElementById('userNameInput');
-    const newName = nameInput ? nameInput.value.trim() : ''; // Use ternary check to prevent crash if element is null
-
-    if (newName.length < 2) {
-        alert("Please enter a valid name (2+ characters).");
-        return;
-    }
-
-    // 2. Save the name to the browser's Local Storage
-    localStorage.setItem('archiveUserName', newName);
-
-    // 3. Immediately transition the modal to the path selection screen
-    checkUserStatus(); 
-}
-
-// Function to show the initial decision modal (used by the back button)
-function showModal() {
-    const modal = document.getElementById('initialModal');
-    const mainApp = document.getElementById('mainApp');
-    const scrollBtn = document.getElementById('scrollUpBtn');
-
-    checkUserStatus(); 
-
-    mainApp.classList.add('hidden-app');
-    modal.classList.remove('hidden-app');
-    scrollBtn.classList.add('hidden-app'); // Hide scroll button
-}
-
-function selectPath(path) {
-    const modal = document.getElementById('initialModal');
-    const mainApp = document.getElementById('mainApp');
-    const historicalView = document.getElementById('historicalView');
-    const searchView = document.getElementById('searchView');
-    const countryView = document.getElementById('countryView'); 
-    const scrollBtn = document.getElementById('scrollUpBtn');
-
-    // 1. Hide the modal and show the main app container
-    modal.classList.add('hidden-app');
-    mainApp.classList.remove('hidden-app');
-    
-    // Hide all content views
-    historicalView.classList.add('hidden-app');
-    searchView.classList.add('hidden-app');
-    countryView.classList.add('hidden-app');
-
-    // 2. Show selected view and initialize
-    if (path === 'historical') {
-        historicalView.classList.remove('hidden-app');
-        loadDataAndPopulateControls(); // Initialize historical controls
-    } else if (path === 'search') {
-        searchView.classList.remove('hidden-app');
-    } else if (path === 'country') { 
-        countryView.classList.remove('hidden-app');
-        loadCountrySelector(); // Initialize country selector list
-    }
-    
-    scrollBtn.classList.remove('hidden-app');
-}
-
-// Ensure the clock starts running immediately on DOM load
 document.addEventListener('DOMContentLoaded', () => {
     updateClock(); 
     setInterval(updateClock, 1000); 
+    
     checkUserStatus(); 
 
     window.addEventListener('scroll', toggleScrollUpButton);
 });
-
 
 // --- SCROLL UP LOGIC ---
 
@@ -182,7 +168,7 @@ function scrollToTop() {
 }
 
 
-// --- 3. HISTORICAL FILTERING LOGIC ---
+// --- HISTORICAL FILTERING LOGIC ---
 
 function applyYearFilter(events, filterValue) {
     if (filterValue === 'all') {
@@ -225,7 +211,7 @@ function applyCategoryFilter(events, category) {
 }
 
 
-// --- 4. HISTORICAL LOOKUP FUNCTION ---
+// --- HISTORICAL LOOKUP FUNCTION ---
 
 async function lookupEvent() {
     const monthSelector = document.getElementById('monthSelector');
@@ -300,7 +286,7 @@ async function lookupEvent() {
 }
 
 
-// --- 5. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS ---
+// --- QUICK SEARCH AND TOPIC SEARCH FUNCTIONS ---
 
 function searchToday() {
     const today = new Date();
@@ -376,7 +362,7 @@ async function searchTopic() {
 }
 
 
-// --- 6. CLEAR SEARCH FUNCTIONS ---
+// --- CLEAR SEARCH FUNCTIONS ---
 
 function clearHistoryResults() {
     const eventList = document.getElementById('eventList');
@@ -406,22 +392,19 @@ function clearCountryResults() {
 }
 
 
-// --- 7. GLOBAL UTILITY FUNCTIONS (Country Selector/News) ---
-let countryList = []; 
+// --- GLOBAL UTILITY FUNCTIONS (Country Selector/News) ---
 
 const REST_COUNTRIES_API = 'https://restcountries.com/v3.1/all?fields=name,cca2';
 const NEWS_PROXY_ENDPOINT = '/api/get-news'; // Vercel function endpoint
 
 
-// Function to fetch the list of all countries
 async function fetchCountries() {
     try {
         const response = await fetch(REST_COUNTRIES_API);
         const data = await response.json();
         
-        countryList = data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+        let countryList = data.sort((a, b) => a.name.common.localeCompare(b.name.common));
 
-        // Pre-populate the dropdown list container for later filtering
         const dropdown = document.getElementById('countryListDropdown');
         dropdown.innerHTML = '';
         countryList.forEach(country => {
@@ -430,7 +413,6 @@ async function fetchCountries() {
             item.textContent = country.name.common;
             item.setAttribute('data-code', country.cca2);
             
-            // Add click listener to select the country
             item.onclick = (e) => selectCountry(e.target.textContent, e.target.getAttribute('data-code'));
             dropdown.appendChild(item);
         });
@@ -442,7 +424,6 @@ async function fetchCountries() {
     }
 }
 
-// Function to filter the country list as the user types
 function filterCountries() {
     const input = document.getElementById('countrySearchInput').value.toLowerCase();
     const dropdown = document.getElementById('countryListDropdown');
@@ -470,25 +451,22 @@ function filterCountries() {
     }
 }
 
-// Function to handle country selection from the list
 function selectCountry(name, code) {
     document.getElementById('countrySearchInput').value = name;
     document.getElementById('countryListDropdown').classList.add('hidden-app');
 }
 
-// Function to show the list on focus
 function showCountryList() {
     document.getElementById('countryListDropdown').classList.remove('hidden-app');
-    // Hide the list if the user scrolls the input out of view
     document.addEventListener('scroll', () => {
         document.getElementById('countryListDropdown').classList.add('hidden-app');
     });
 }
 
-// Initialization function for the Country View
 function loadCountrySelector() {
-    // Call the function to fetch countries and populate the list
-    if (countryList.length === 0) {
+    // Check if the country list needs to be fetched
+    const dropdown = document.getElementById('countryListDropdown');
+    if (dropdown.children.length <= 1) { // Check if only the placeholder/error is present
         fetchCountries();
     }
     document.getElementById('countrySearchInput').value = '';
@@ -550,4 +528,3 @@ async function fetchCountryNews() {
         </li>`;
     }
 }
-
