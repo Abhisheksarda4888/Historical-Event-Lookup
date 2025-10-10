@@ -170,7 +170,7 @@ header h1 {
     font-family: var(--font-body);
 }
 
-/* --- CONTROLS SECTION --- */
+/* --- CONTROLS SECTION (General Styles for Dropdowns/Buttons) --- */
 .controls-wrapper {
     padding: 20px 30px;
     background-color: #f2f2f2;
@@ -253,7 +253,45 @@ header h1 {
 }
 
 
-/* --- QUICK SEARCH STYLES --- */
+/* --- NEW AUTCOMPLETE/TYPEAHEAD STYLES --- */
+.country-selector-wrapper {
+    position: relative; 
+    flex-grow: 1;
+    z-index: 10; 
+    /* Ensures input remains visually consistent with others */
+    min-width: 150px; 
+}
+
+.autocomplete-list {
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    right: 0;
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid var(--color-primary);
+    background-color: var(--color-secondary);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-top: none; 
+    z-index: 10;
+}
+
+.autocomplete-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.9em;
+    color: var(--color-primary);
+    border-bottom: 1px solid #eee;
+    text-transform: uppercase;
+}
+
+.autocomplete-item:hover, .autocomplete-item.selected {
+    background-color: #f2f2f2; 
+}
+
+
+/* --- QUICK SEARCH STYLES (Existing) --- */
 .quick-searches-wrapper {
     padding: 10px 30px 20px;
     background-color: var(--color-secondary);
@@ -293,7 +331,7 @@ header h1 {
 }
 
 
-/* --- CLEAR BUTTON STYLES --- */
+/* --- CLEAR BUTTON STYLES (Existing) --- */
 .clear-wrapper {
     padding: 10px 30px;
     background-color: var(--color-background); 
@@ -325,7 +363,7 @@ header h1 {
     border-color: var(--color-primary);
 }
 
-/* --- SCROLL UP BUTTON STYLES (NEW) --- */
+/* --- SCROLL UP BUTTON STYLES (Existing) --- */
 .scroll-up-btn {
     position: fixed;
     bottom: 20px;
@@ -443,15 +481,26 @@ header h1 {
         margin-left: 0;
     }
 
-    .controls, .quick-searches-wrapper, .search-input-group {
+    .controls, .quick-searches-wrapper {
         flex-direction: column;
         gap: 10px;
     }
     
-    .control-input, .control-button, .quick-button, .search-input, .search-button {
+    .control-input, .control-button, .quick-button {
         width: 100%; 
         margin: 0 !important;
     }
+    
+    /* FIX: Mobile search bar stacking */
+    .search-input-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .search-input, .search-button {
+        width: 100%;
+        margin: 0 !important;
+    }
+
 
     header, .controls-wrapper, .quick-searches-wrapper, .results-area, .search-controls-wrapper, .clear-wrapper {
         padding-left: 15px;
