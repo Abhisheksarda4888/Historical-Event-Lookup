@@ -3,7 +3,7 @@
 const API_BASE_URL = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/';
 const WIKI_SEARCH_API = 'https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=';
 const WIKI_PAGE_URL = 'https://en.wikipedia.org/wiki/';
-const REST_COUNTRIES_API = 'https://restcountries.com/v3.1/all?fields=name,cca2'; // API for country list
+const REST_COUNTRIES_API = 'https://restcountries.com/v3.1/all?fields=name,cca2'; 
 
 // Mapping of category names to keywords for client-side filtering
 const CATEGORY_KEYWORDS = {
@@ -18,7 +18,6 @@ const CATEGORY_KEYWORDS = {
     'all': [''], 
 };
 
-// --- NEW GLOBAL UTILITY VARIABLES ---
 let countryList = []; // Stores all fetched countries
 
 
@@ -83,10 +82,13 @@ function checkUserStatus() {
     const welcomeHeader = document.getElementById('welcomeHeader');
 
     if (userName) {
+        // User exists: Show personalized greeting and path selection
         registrationForm.classList.add('hidden-app');
         pathSelection.classList.remove('hidden-app');
         welcomeHeader.textContent = `WELCOME BACK, ${userName.toUpperCase()}`;
+        
     } else {
+        // New user: Show registration form
         registrationForm.classList.remove('hidden-app');
         pathSelection.classList.add('hidden-app');
     }
@@ -101,20 +103,25 @@ function createUserProfile() {
         return;
     }
 
+    // 1. Save the name to the browser's Local Storage
     localStorage.setItem('archiveUserName', newName);
-    checkUserStatus();
+
+    // 2. Refresh the modal view to show the personalized path selection
+    checkUserStatus(); 
 }
 
+// Function to show the initial decision modal (used by the back button)
 function showModal() {
     const modal = document.getElementById('initialModal');
     const mainApp = document.getElementById('mainApp');
     const scrollBtn = document.getElementById('scrollUpBtn');
 
+    // Re-check status before showing modal
     checkUserStatus(); 
 
     mainApp.classList.add('hidden-app');
     modal.classList.remove('hidden-app');
-    scrollBtn.classList.add('hidden-app');
+    scrollBtn.classList.add('hidden-app'); // Hide scroll button
 }
 
 function selectPath(path) {
@@ -129,12 +136,12 @@ function selectPath(path) {
     modal.classList.add('hidden-app');
     mainApp.classList.remove('hidden-app');
     
-    // Hide all views
+    // Hide all content views
     historicalView.classList.add('hidden-app');
     searchView.classList.add('hidden-app');
     countryView.classList.add('hidden-app');
 
-    // 2. Determine which specific view to show
+    // 2. Show selected view and initialize
     if (path === 'historical') {
         historicalView.classList.remove('hidden-app');
         loadDataAndPopulateControls(); // Initialize historical controls
@@ -148,15 +155,20 @@ function selectPath(path) {
     scrollBtn.classList.remove('hidden-app');
 }
 
+
 // Ensure the clock starts running immediately on DOM load
 document.addEventListener('DOMContentLoaded', () => {
+    // Start the clock interval
     updateClock(); 
     setInterval(updateClock, 1000); 
     
+    // Check local storage for user profile
     checkUserStatus(); 
 
+    // Add scroll event listener to show/hide the scroll-up button
     window.addEventListener('scroll', toggleScrollUpButton);
 });
+
 
 // --- SCROLL UP LOGIC ---
 
@@ -174,7 +186,7 @@ function scrollToTop() {
 }
 
 
-// --- 3. FILTERING LOGIC (Existing) ---
+// --- 3. HISTORICAL FILTERING LOGIC (Existing) ---
 
 function applyYearFilter(events, filterValue) {
     if (filterValue === 'all') {
@@ -217,7 +229,7 @@ function applyCategoryFilter(events, category) {
 }
 
 
-// --- 4. HISTORICAL LOOKUP FUNCTION (Existing) ---
+// --- 4. HISTORICAL LOOKUP FUNCTION ---
 
 async function lookupEvent() {
     const monthSelector = document.getElementById('monthSelector');
@@ -292,7 +304,7 @@ async function lookupEvent() {
 }
 
 
-// --- 5. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS (Existing) ---
+// --- 5. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS ---
 
 function searchToday() {
     const today = new Date();
@@ -342,7 +354,7 @@ async function searchTopic() {
         const data = await response.json();
         const searchResults = data.query.search || [];
 
-        resultList.innerHTML = ''; 
+        resultList.innerHTML = ''; // Clear loading message
 
         if (searchResults.length > 0) {
             searchResults.forEach(item => {
@@ -387,9 +399,19 @@ function clearTopicResults() {
     searchInput.value = ''; // Clear the input bar as well
 }
 
+function clearCountryResults() {
+    const resultList = document.getElementById('countryResultList');
+    const searchInput = document.getElementById('countrySearchInput');
+    
+    resultList.innerHTML = `<li class="event-item placeholder">
+        <span class="year-label">System:</span> Select a country and category above.
+    </li>`;
+    searchInput.value = ''; // Clear the input bar
+}
 
-// --- 7. GLOBAL UTILITY FUNCTIONS (NEW) ---
-let countryList = []; // Stores all fetched countries
+
+// --- 7. GLOBAL UTILITY FUNCTIONS (Country Selector) ---
+let countryList = []; 
 
 const REST_COUNTRIES_API = 'https://restcountries.com/v3.1/all?fields=name,cca2';
 
@@ -461,7 +483,7 @@ function selectCountry(name, code) {
 // Function to show the list on focus
 function showCountryList() {
     document.getElementById('countryListDropdown').classList.remove('hidden-app');
-    // We want to hide the list if the user scrolls the input out of view
+    // Hide the list if the user scrolls the input out of view
     document.addEventListener('scroll', () => {
         document.getElementById('countryListDropdown').classList.add('hidden-app');
     });
@@ -476,17 +498,6 @@ function loadCountrySelector() {
     document.getElementById('countrySearchInput').value = '';
 }
 
-function clearCountryResults() {
-    const resultList = document.getElementById('countryResultList');
-    const searchInput = document.getElementById('countrySearchInput');
-    
-    resultList.innerHTML = `<li class="event-item placeholder">
-        <span class="year-label">System:</span> Select a country and category above.
-    </li>`;
-    searchInput.value = ''; // Clear the input bar
-}
-
-
 // Function to handle the final news search query (using country name from input)
 async function fetchCountryNews() {
     const countryName = document.getElementById('countrySearchInput').value.trim();
@@ -500,10 +511,10 @@ async function fetchCountryNews() {
 
     resultList.innerHTML = `<li class="event-item placeholder">Searching for LIVE ${category} in ${countryName}...</li>`;
 
-    // --- QUERY FORMULATION ---
-    // Placeholder Logic (Simulates an API response)
+    // --- QUERY FORMULATION (The Placeholder for the secure function) ---
     const searchQuery = `${category} news in ${countryName}`;
     
+    // Placeholder Logic (Simulates an API response)
     setTimeout(() => {
         resultList.innerHTML = `
             <li class="event-item">
@@ -518,3 +529,16 @@ async function fetchCountryNews() {
         `;
     }, 2000);
 }
+
+// Execution starts here
+document.addEventListener('DOMContentLoaded', () => {
+    // Start the clock interval
+    updateClock(); 
+    setInterval(updateClock, 1000); 
+    
+    // Check local storage for user profile and show the correct modal view
+    checkUserStatus(); 
+
+    // Add scroll event listener to show/hide the scroll-up button
+    window.addEventListener('scroll', toggleScrollUpButton);
+});
