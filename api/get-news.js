@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-// This function runs securely on Vercel as the endpoint /api/get-news
+// This function will run securely on Vercel as the endpoint /api/get-news
 module.exports = async (req, res) => {
     // CRITICAL: Get the secret key from Vercel's environment variables
     const apiKey = process.env.NEWS_API_KEY; 
@@ -11,11 +11,11 @@ module.exports = async (req, res) => {
 
     // The frontend sends the query string via the request body
     const { query } = req.body;
-
+    
     if (!query) {
          return res.status(400).json({ error: "No search query provided." });
     }
-
+    
     // Construct the NewsAPI URL using the query and the secret key
     const newsApiUrl = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=en&pageSize=5&sortBy=publishedAt&apiKey=${apiKey}`;
 
