@@ -23,8 +23,10 @@ let countryList = [];
 
 
 // --- 2. PROFILE & NAVIGATION CORE FUNCTIONS (MOVED TO TOP) ---
+// These functions are critical for the HTML onclick to work immediately.
 
 function createUserProfile() {
+    // FIX: Get the name input element and its value
     const nameInput = document.getElementById('userNameInput');
     const newName = nameInput ? nameInput.value.trim() : '';
 
@@ -33,10 +35,7 @@ function createUserProfile() {
         return;
     }
 
-    // 1. Save the name to the browser's Local Storage
     localStorage.setItem('archiveUserName', newName);
-
-    // 2. Call checkUserStatus to transition the modal
     checkUserStatus(); 
 }
 
@@ -286,7 +285,7 @@ async function lookupEvent() {
 }
 
 
-// --- 5. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS (Existing) ---
+// --- 5. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS ---
 
 function searchToday() {
     const today = new Date();
@@ -478,11 +477,22 @@ async function fetchCountryNews() {
         return;
     }
 
-    resultList.innerHTML = `<li class="event-item placeholder">Searching for LIVE ${category} in ${countryName}...</li>`;
+    // --- FIX: Dynamic Search Query based on Category ---
+    let searchQuery;
+    let displayCategory = category;
+
+    if (category === "ALL") {
+        // If ALL is selected, send a broad query for the country's main news
+        searchQuery = `top headlines ${countryName} OR ${countryName} general facts`;
+        displayCategory = "Top Headlines/General"; // For the user message
+    } else {
+        // Use the selected category and country for a focused search
+        searchQuery = `${category} news in ${countryName}`;
+    }
+
+    resultList.innerHTML = `<li class="event-item placeholder">Searching for LIVE ${displayCategory} in ${countryName}...</li>`;
 
     // --- EXECUTES SECURE VERCEL PROXY CALL ---
-    const searchQuery = (category === "ALL") ? `current news about ${countryName}` : `${category} news in ${countryName}`;
-    
     try {
         const newsResponse = await fetch(NEWS_PROXY_ENDPOINT, { 
             method: 'POST', 
