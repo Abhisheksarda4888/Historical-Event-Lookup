@@ -1,4 +1,4 @@
-// --- 1. CONFIGURATION AND CORE SETUP ---
+// --- 1. CONFIGURATION AND CORE SETUP (TOP OF FILE) ---
 
 const API_BASE_URL = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/';
 const WIKI_SEARCH_API = 'https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=';
@@ -19,9 +19,27 @@ const CATEGORY_KEYWORDS = {
     'all': [''], 
 };
 
-let countryList = []; // CORRECT DECLARATION: ONLY ONCE AT THE TOP
+let countryList = []; // Global variable for country selector
 
-// --- PROFILE & NAVIGATION LOGIC ---
+
+// --- 2. PROFILE & NAVIGATION CORE FUNCTIONS (MOVED TO TOP) ---
+
+// CRITICAL: This must be near the top so the HTML button can find it.
+function createUserProfile() {
+    const nameInput = document.getElementById('userNameInput');
+    const newName = nameInput ? nameInput.value.trim() : '';
+
+    if (newName.length < 2) {
+        alert("Please enter a valid name (2+ characters).");
+        return;
+    }
+
+    // 1. Save the name to the browser's Local Storage
+    localStorage.setItem('archiveUserName', newName);
+
+    // 2. Call checkUserStatus to transition the modal
+    checkUserStatus(); 
+}
 
 function checkUserStatus() {
     const userName = localStorage.getItem('archiveUserName');
@@ -33,34 +51,20 @@ function checkUserStatus() {
         registrationForm.classList.add('hidden-app');
         pathSelection.classList.remove('hidden-app');
         welcomeHeader.textContent = `WELCOME BACK, ${userName.toUpperCase()}`;
+        
     } else {
         registrationForm.classList.remove('hidden-app');
         pathSelection.classList.add('hidden-app');
     }
 }
 
-function createUserProfile() {
-    const nameInput = document.getElementById('userNameInput');
-    const newName = nameInput.value.trim();
-
-    if (newName.length < 2) {
-        alert("Please enter a valid name.");
-        return;
-    }
-
-    // 1. Save the name to the browser's Local Storage
-    localStorage.setItem('archiveUserName', newName);
-
-    // 2. Call checkUserStatus to transition the modal
-    checkUserStatus(); 
-}
-
+// Function to show the initial decision modal (used by the back button)
 function showModal() {
     const modal = document.getElementById('initialModal');
     const mainApp = document.getElementById('mainApp');
     const scrollBtn = document.getElementById('scrollUpBtn');
 
-    checkUserStatus(); 
+    checkUserStatus(); // Check status when returning
 
     mainApp.classList.add('hidden-app');
     modal.classList.remove('hidden-app');
@@ -84,29 +88,18 @@ function selectPath(path) {
 
     if (path === 'historical') {
         historicalView.classList.remove('hidden-app');
-        loadDataAndPopulateControls();
+        loadDataAndPopulateControls(); 
     } else if (path === 'search') {
         searchView.classList.remove('hidden-app');
     } else if (path === 'country') { 
         countryView.classList.remove('hidden-app');
-        loadCountrySelector();
+        loadCountrySelector(); 
     }
     
     scrollBtn.classList.remove('hidden-app');
 }
 
-// --- CLOCK & INITIALIZATION FUNCTIONS ---
-
-function populateDropdown(selectorId, count, startValue = 1) {
-    const selector = document.getElementById(selectorId);
-    for (let i = startValue; i <= count; i++) {
-        const option = document.createElement('option');
-        const displayValue = i.toString().padStart(2, '0');
-        option.value = displayValue; 
-        option.textContent = displayValue;
-        selector.appendChild(option);
-    }
-}
+// --- CLOCK, LOADER, AND UTILITY FUNCTIONS ---
 
 function updateClock() {
     const now = new Date();
@@ -120,6 +113,17 @@ function updateClock() {
     const clockElement = document.getElementById('realTimeClock');
     if (clockElement) {
         clockElement.textContent = `${formattedDate} ${formattedTime} IST`;
+    }
+}
+
+function populateDropdown(selectorId, count, startValue = 1) {
+    const selector = document.getElementById(selectorId);
+    for (let i = startValue; i <= count; i++) {
+        const option = document.createElement('option');
+        const displayValue = i.toString().padStart(2, '0');
+        option.value = displayValue; 
+        option.textContent = displayValue;
+        selector.appendChild(option);
     }
 }
 
@@ -143,14 +147,6 @@ function loadDataAndPopulateControls() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    updateClock(); 
-    setInterval(updateClock, 1000); 
-    
-    checkUserStatus(); 
-
-    window.addEventListener('scroll', toggleScrollUpButton);
-});
 
 // --- SCROLL UP LOGIC ---
 
@@ -168,7 +164,7 @@ function scrollToTop() {
 }
 
 
-// --- HISTORICAL FILTERING LOGIC ---
+// --- 3. FILTERING LOGIC ---
 
 function applyYearFilter(events, filterValue) {
     if (filterValue === 'all') {
@@ -211,7 +207,7 @@ function applyCategoryFilter(events, category) {
 }
 
 
-// --- HISTORICAL LOOKUP FUNCTION ---
+// --- 4. HISTORICAL LOOKUP FUNCTION ---
 
 async function lookupEvent() {
     const monthSelector = document.getElementById('monthSelector');
@@ -286,7 +282,7 @@ async function lookupEvent() {
 }
 
 
-// --- QUICK SEARCH AND TOPIC SEARCH FUNCTIONS ---
+// --- 5. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS ---
 
 function searchToday() {
     const today = new Date();
@@ -362,7 +358,7 @@ async function searchTopic() {
 }
 
 
-// --- CLEAR SEARCH FUNCTIONS ---
+// --- 6. CLEAR SEARCH FUNCTIONS ---
 
 function clearHistoryResults() {
     const eventList = document.getElementById('eventList');
@@ -392,11 +388,7 @@ function clearCountryResults() {
 }
 
 
-// --- GLOBAL UTILITY FUNCTIONS (Country Selector/News) ---
-
-const REST_COUNTRIES_API = 'https://restcountries.com/v3.1/all?fields=name,cca2';
-const NEWS_PROXY_ENDPOINT = '/api/get-news'; // Vercel function endpoint
-
+// --- 7. GLOBAL UTILITY FUNCTIONS (Country Selector/News) ---
 
 async function fetchCountries() {
     try {
@@ -464,9 +456,8 @@ function showCountryList() {
 }
 
 function loadCountrySelector() {
-    // Check if the country list needs to be fetched
     const dropdown = document.getElementById('countryListDropdown');
-    if (dropdown.children.length <= 1) { // Check if only the placeholder/error is present
+    if (dropdown.children.length <= 1) { 
         fetchCountries();
     }
     document.getElementById('countrySearchInput').value = '';
