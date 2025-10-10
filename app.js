@@ -1,4 +1,4 @@
-// --- 1. CONFIGURATION AND CORE SETUP (TOP OF FILE) ---
+// --- 1. CONFIGURATION AND CORE SETUP ---
 
 const API_BASE_URL = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/';
 const WIKI_SEARCH_API = 'https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=';
@@ -19,12 +19,12 @@ const CATEGORY_KEYWORDS = {
     'all': [''], 
 };
 
-let countryList = []; // Global variable for country selector
+let countryList = []; // CORRECT DECLARATION: Global variables declared only once
 
 
-// --- 2. PROFILE & NAVIGATION CORE FUNCTIONS (MOVED TO TOP) ---
+// --- 2. PROFILE & NAVIGATION CORE FUNCTIONS (TOP PRIORITY) ---
 
-// CRITICAL: This must be near the top so the HTML button can find it.
+// CRITICAL FIX: The function called by the HTML button
 function createUserProfile() {
     const nameInput = document.getElementById('userNameInput');
     const newName = nameInput ? nameInput.value.trim() : '';
@@ -64,7 +64,7 @@ function showModal() {
     const mainApp = document.getElementById('mainApp');
     const scrollBtn = document.getElementById('scrollUpBtn');
 
-    checkUserStatus(); // Check status when returning
+    checkUserStatus(); // Re-check status when returning
 
     mainApp.classList.add('hidden-app');
     modal.classList.remove('hidden-app');
@@ -99,7 +99,18 @@ function selectPath(path) {
     scrollBtn.classList.remove('hidden-app');
 }
 
-// --- CLOCK, LOADER, AND UTILITY FUNCTIONS ---
+// --- CLOCK, SCROLL & UTILITY FUNCTIONS ---
+
+function populateDropdown(selectorId, count, startValue = 1) {
+    const selector = document.getElementById(selectorId);
+    for (let i = startValue; i <= count; i++) {
+        const option = document.createElement('option');
+        const displayValue = i.toString().padStart(2, '0');
+        option.value = displayValue; 
+        option.textContent = displayValue;
+        selector.appendChild(option);
+    }
+}
 
 function updateClock() {
     const now = new Date();
@@ -113,17 +124,6 @@ function updateClock() {
     const clockElement = document.getElementById('realTimeClock');
     if (clockElement) {
         clockElement.textContent = `${formattedDate} ${formattedTime} IST`;
-    }
-}
-
-function populateDropdown(selectorId, count, startValue = 1) {
-    const selector = document.getElementById(selectorId);
-    for (let i = startValue; i <= count; i++) {
-        const option = document.createElement('option');
-        const displayValue = i.toString().padStart(2, '0');
-        option.value = displayValue; 
-        option.textContent = displayValue;
-        selector.appendChild(option);
     }
 }
 
@@ -147,9 +147,6 @@ function loadDataAndPopulateControls() {
     }
 }
 
-
-// --- SCROLL UP LOGIC ---
-
 function toggleScrollUpButton() {
     const scrollBtn = document.getElementById('scrollUpBtn');
     if (window.scrollY > 300) { 
@@ -164,7 +161,7 @@ function scrollToTop() {
 }
 
 
-// --- 3. FILTERING LOGIC ---
+// --- HISTORICAL FILTERING LOGIC ---
 
 function applyYearFilter(events, filterValue) {
     if (filterValue === 'all') {
