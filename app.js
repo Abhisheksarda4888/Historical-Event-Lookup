@@ -19,12 +19,13 @@ const CATEGORY_KEYWORDS = {
     'all': [''], 
 };
 
-let countryList = []; 
+let countryList = []; // Global variable for country selector
 
 
-// --- 2. PROFILE & NAVIGATION CORE FUNCTIONS (Working and Final) ---
+// --- 2. PROFILE & NAVIGATION CORE FUNCTIONS (TOP PRIORITY) ---
 
 function createUserProfile() {
+    // Function called by the START ARCHIVING button.
     const nameInput = document.getElementById('userNameInput');
     const newName = nameInput ? nameInput.value.trim() : '';
 
@@ -165,7 +166,7 @@ function scrollToTop() {
 }
 
 
-// --- 3. FILTERING LOGIC (Existing) ---
+// --- 3. FILTERING LOGIC ---
 
 function applyYearFilter(events, filterValue) {
     if (filterValue === 'all') {
@@ -208,7 +209,7 @@ function applyCategoryFilter(events, category) {
 }
 
 
-// --- 4. HISTORICAL LOOKUP FUNCTION (Existing) ---
+// --- 4. HISTORICAL LOOKUP FUNCTION ---
 
 async function lookupEvent() {
     const monthSelector = document.getElementById('monthSelector');
@@ -310,7 +311,7 @@ function searchRandom() {
     lookupEvent();
 }
 
-// NOTE: This function is for general Wikipedia article search, NOT live news.
+// Function for Topic Search (Wikipedia Article Lookup)
 async function searchTopic() {
     const query = document.getElementById('topicSearchInput').value.trim();
     const resultList = document.getElementById('topicResultList');
@@ -385,7 +386,7 @@ function clearCountryResults() {
     
     resultList.innerHTML = `<li class="event-item placeholder">
         <span class="year-label">System:</span> Select a country and category above.
-    </li>`;
+    </dli>`;
     searchInput.value = ''; // Clear the input bar
 }
 
@@ -476,6 +477,7 @@ async function fetchCountryNews() {
         return;
     }
 
+    // --- FIX: Dynamic Search Query based on Category ---
     let searchQuery;
     let displayCategory = category;
 
