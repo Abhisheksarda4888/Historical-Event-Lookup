@@ -170,7 +170,7 @@ header h1 {
     font-family: var(--font-body);
 }
 
-/* --- CONTROLS SECTION (General Styles for Dropdowns/Buttons) --- */
+/* --- CONTROLS SECTION --- */
 .controls-wrapper {
     padding: 20px 30px;
     background-color: #f2f2f2;
@@ -226,7 +226,7 @@ header h1 {
 }
 
 /* --- SEARCH VIEW STYLES --- */
-#searchView .search-controls-wrapper {
+#searchView .search-controls-wrapper, #countryView .search-controls-wrapper {
     padding: 20px 30px;
     background-color: #f2f2f2;
     border-bottom: 2px solid var(--color-primary);
@@ -258,7 +258,6 @@ header h1 {
     position: relative; 
     flex-grow: 1;
     z-index: 10; 
-    /* Ensures input remains visually consistent with others */
     min-width: 150px; 
 }
 
@@ -291,7 +290,7 @@ header h1 {
 }
 
 
-/* --- QUICK SEARCH STYLES (Existing) --- */
+/* --- QUICK SEARCH STYLES --- */
 .quick-searches-wrapper {
     padding: 10px 30px 20px;
     background-color: var(--color-secondary);
@@ -331,7 +330,7 @@ header h1 {
 }
 
 
-/* --- CLEAR BUTTON STYLES (Existing) --- */
+/* --- CLEAR BUTTON STYLES --- */
 .clear-wrapper {
     padding: 10px 30px;
     background-color: var(--color-background); 
@@ -363,7 +362,7 @@ header h1 {
     border-color: var(--color-primary);
 }
 
-/* --- SCROLL UP BUTTON STYLES (Existing) --- */
+/* --- SCROLL UP BUTTON STYLES --- */
 .scroll-up-btn {
     position: fixed;
     bottom: 20px;
@@ -389,7 +388,7 @@ header h1 {
 }
 
 
-/* --- RESULTS AREA (Existing) --- */
+/* --- RESULTS AREA --- */
 .results-area {
     padding: 30px;
     text-align: left;
@@ -438,7 +437,7 @@ header h1 {
     color: #999;
 }
 
-/* --- Link Appearance for Events (Existing) --- */
+/* --- Link Appearance for Events --- */
 .event-link {
     text-decoration: none; 
     color: inherit; 
@@ -450,7 +449,7 @@ header h1 {
     color: #444444; 
 }
 
-/* --- APP FOOTER STYLES (Existing) --- */
+/* --- APP FOOTER STYLES --- */
 .app-footer {
     text-align: center;
     font-family: var(--font-body);
@@ -491,7 +490,7 @@ header h1 {
         margin: 0 !important;
     }
     
-    /* FIX: Mobile search bar stacking */
+    /* FIX: Search bar stacking */
     .search-input-group {
         flex-direction: column;
         gap: 10px;
@@ -505,5 +504,10 @@ header h1 {
     header, .controls-wrapper, .quick-searches-wrapper, .results-area, .search-controls-wrapper, .clear-wrapper {
         padding-left: 15px;
         padding-right: 15px;
+    }
+    
+    /* FIX: Modal buttons stacking */
+    .modal-buttons {
+        flex-direction: column;
     }
 }
