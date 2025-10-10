@@ -19,13 +19,14 @@ const CATEGORY_KEYWORDS = {
     'all': [''], 
 };
 
-let countryList = []; // CORRECT DECLARATION: Global variables declared only once
+let countryList = []; // Global variable for country selector
 
 
-// --- 2. PROFILE & NAVIGATION CORE FUNCTIONS (TOP PRIORITY) ---
+// --- 2. PROFILE & NAVIGATION CORE FUNCTIONS (MOVED TO TOP) ---
+// These functions MUST be defined early so the HTML's onclick can find them.
 
-// CRITICAL FIX: The function called by the HTML button
 function createUserProfile() {
+    // CRITICAL FIX: The function called by the START ARCHIVING button.
     const nameInput = document.getElementById('userNameInput');
     const newName = nameInput ? nameInput.value.trim() : '';
 
@@ -64,7 +65,7 @@ function showModal() {
     const mainApp = document.getElementById('mainApp');
     const scrollBtn = document.getElementById('scrollUpBtn');
 
-    checkUserStatus(); // Re-check status when returning
+    checkUserStatus(); 
 
     mainApp.classList.add('hidden-app');
     modal.classList.remove('hidden-app');
@@ -146,6 +147,20 @@ function loadDataAndPopulateControls() {
                                  <span>Unlock New History</span>`;
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Start the clock interval
+    updateClock(); 
+    setInterval(updateClock, 1000); 
+    
+    // Check local storage for user profile and show the correct modal view
+    checkUserStatus(); 
+
+    // Add scroll event listener to show/hide the scroll-up button
+    window.addEventListener('scroll', toggleScrollUpButton);
+});
+
+// --- SCROLL UP LOGIC ---
 
 function toggleScrollUpButton() {
     const scrollBtn = document.getElementById('scrollUpBtn');
