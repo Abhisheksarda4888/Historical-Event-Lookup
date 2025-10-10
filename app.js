@@ -22,11 +22,9 @@ const CATEGORY_KEYWORDS = {
 let countryList = []; 
 
 
-// --- 2. PROFILE & NAVIGATION CORE FUNCTIONS (MOVED TO TOP) ---
-// These functions are critical for the HTML onclick to work immediately.
+// --- 2. PROFILE & NAVIGATION CORE FUNCTIONS (Working and Final) ---
 
 function createUserProfile() {
-    // FIX: Get the name input element and its value
     const nameInput = document.getElementById('userNameInput');
     const newName = nameInput ? nameInput.value.trim() : '';
 
@@ -167,7 +165,7 @@ function scrollToTop() {
 }
 
 
-// --- 3. FILTERING LOGIC ---
+// --- 3. FILTERING LOGIC (Existing) ---
 
 function applyYearFilter(events, filterValue) {
     if (filterValue === 'all') {
@@ -210,7 +208,7 @@ function applyCategoryFilter(events, category) {
 }
 
 
-// --- 4. HISTORICAL LOOKUP FUNCTION ---
+// --- 4. HISTORICAL LOOKUP FUNCTION (Existing) ---
 
 async function lookupEvent() {
     const monthSelector = document.getElementById('monthSelector');
@@ -312,6 +310,7 @@ function searchRandom() {
     lookupEvent();
 }
 
+// NOTE: This function is for general Wikipedia article search, NOT live news.
 async function searchTopic() {
     const query = document.getElementById('topicSearchInput').value.trim();
     const resultList = document.getElementById('topicResultList');
@@ -477,16 +476,13 @@ async function fetchCountryNews() {
         return;
     }
 
-    // --- FIX: Dynamic Search Query based on Category ---
     let searchQuery;
     let displayCategory = category;
 
     if (category === "ALL") {
-        // If ALL is selected, send a broad query for the country's main news
         searchQuery = `top headlines ${countryName} OR ${countryName} general facts`;
-        displayCategory = "Top Headlines/General"; // For the user message
+        displayCategory = "Top Headlines/General";
     } else {
-        // Use the selected category and country for a focused search
         searchQuery = `${category} news in ${countryName}`;
     }
 
