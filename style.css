@@ -1,4 +1,4 @@
-/* --- ROOT STYLES --- */
+/* --- ROOT STYLES (No change) --- */
 :root {
     --color-primary: #000000;
     --color-secondary: #FFFFFF;
@@ -8,7 +8,7 @@
     --font-body: 'Roboto Mono', monospace; 
 }
 
-/* --- GLOBAL STYLES --- */
+/* --- GLOBAL STYLES (No change) --- */
 .hidden-app {
     display: none !important;
 }
@@ -37,14 +37,14 @@ body {
     overflow: hidden;
 }
 
-/* --- MODAL STYLES (VIBRANT ENTRY POINT) --- */
+/* --- MODAL STYLES (VIBRANT ENTRY POINT - No change) --- */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #E6E6FA; 
+    background-color: #E6E6FA; /* Light Lavender background */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -67,7 +67,7 @@ body {
     font-family: var(--font-heading);
     font-size: 1.8em; 
     margin-bottom: 5px;
-    color: #4169E1; 
+    color: #4169E1; /* Royal Blue accent color */
     text-transform: uppercase;
 }
 
@@ -107,7 +107,7 @@ body {
 }
 
 
-/* --- HEADER AND NAVIGATION STYLES --- */
+/* --- HEADER AND NAVIGATION STYLES (No change) --- */
 header {
     background-color: var(--color-secondary);
     color: var(--color-primary);
@@ -170,7 +170,7 @@ header h1 {
     font-family: var(--font-body);
 }
 
-/* --- CONTROLS SECTION --- */
+/* --- CONTROLS SECTION (General Styles for Dropdowns/Buttons) --- */
 .controls-wrapper {
     padding: 20px 30px;
     background-color: #f2f2f2;
@@ -192,7 +192,7 @@ header h1 {
     text-transform: uppercase;
     border-radius: 0;
     transition: all 0.2s ease;
-    box-sizing: border-box; /* IMPORTANT: Ensures padding doesn't break layout */
+    box-sizing: border-box; 
 }
 
 .control-input {
@@ -233,6 +233,7 @@ header h1 {
     border-bottom: 2px solid var(--color-primary);
 }
 
+/* Keyword search bar group */
 .search-input-group {
     display: flex;
     gap: 15px;
@@ -487,7 +488,6 @@ header h1 {
     }
     
     .control-input, .control-button, .quick-button {
-        /* CRITICAL: Must include box-sizing for proper mobile rendering */
         width: 100%; 
         margin: 0 !important;
         box-sizing: border-box; 
@@ -501,7 +501,7 @@ header h1 {
     .search-input, .search-button, .country-selector-wrapper {
         width: 100%;
         margin: 0 !important;
-        box-sizing: border-box; /* FIX: Ensures input doesn't exceed 100% width */
+        box-sizing: border-box; 
     }
 
 
