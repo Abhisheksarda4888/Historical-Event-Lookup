@@ -19,14 +19,12 @@ const CATEGORY_KEYWORDS = {
     'all': [''], 
 };
 
-let countryList = []; // Global variable for country selector
+let countryList = []; 
 
 
 // --- 2. PROFILE & NAVIGATION CORE FUNCTIONS (MOVED TO TOP) ---
-// These functions MUST be defined early so the HTML's onclick can find them.
 
 function createUserProfile() {
-    // CRITICAL FIX: The function called by the START ARCHIVING button.
     const nameInput = document.getElementById('userNameInput');
     const newName = nameInput ? nameInput.value.trim() : '';
 
@@ -59,7 +57,6 @@ function checkUserStatus() {
     }
 }
 
-// Function to show the initial decision modal (used by the back button)
 function showModal() {
     const modal = document.getElementById('initialModal');
     const mainApp = document.getElementById('mainApp');
@@ -149,18 +146,13 @@ function loadDataAndPopulateControls() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Start the clock interval
     updateClock(); 
     setInterval(updateClock, 1000); 
     
-    // Check local storage for user profile and show the correct modal view
     checkUserStatus(); 
 
-    // Add scroll event listener to show/hide the scroll-up button
     window.addEventListener('scroll', toggleScrollUpButton);
 });
-
-// --- SCROLL UP LOGIC ---
 
 function toggleScrollUpButton() {
     const scrollBtn = document.getElementById('scrollUpBtn');
@@ -176,7 +168,7 @@ function scrollToTop() {
 }
 
 
-// --- HISTORICAL FILTERING LOGIC ---
+// --- 3. FILTERING LOGIC ---
 
 function applyYearFilter(events, filterValue) {
     if (filterValue === 'all') {
@@ -294,7 +286,7 @@ async function lookupEvent() {
 }
 
 
-// --- 5. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS ---
+// --- 5. QUICK SEARCH AND TOPIC SEARCH FUNCTIONS (Existing) ---
 
 function searchToday() {
     const today = new Date();
@@ -489,7 +481,7 @@ async function fetchCountryNews() {
     resultList.innerHTML = `<li class="event-item placeholder">Searching for LIVE ${category} in ${countryName}...</li>`;
 
     // --- EXECUTES SECURE VERCEL PROXY CALL ---
-    const searchQuery = `${category} news in ${countryName}`;
+    const searchQuery = (category === "ALL") ? `current news about ${countryName}` : `${category} news in ${countryName}`;
     
     try {
         const newsResponse = await fetch(NEWS_PROXY_ENDPOINT, { 
