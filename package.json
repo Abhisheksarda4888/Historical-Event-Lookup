@@ -1,9 +1,6 @@
 {
   "name": "the-curated-archive",
-  "version": "1.0.0",
-  "description": "Backend configuration for Vercel Serverless Functions.",
-  "main": "api/get-news.js",
   "dependencies": {
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1" 
   }
 }
