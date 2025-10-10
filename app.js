@@ -19,13 +19,12 @@ const CATEGORY_KEYWORDS = {
     'all': [''], 
 };
 
-let countryList = []; // Global variable for country selector
+let countryList = []; 
 
 
-// --- 2. PROFILE & NAVIGATION CORE FUNCTIONS (TOP PRIORITY) ---
+// --- 2. PROFILE & NAVIGATION CORE FUNCTIONS (Working and Final) ---
 
 function createUserProfile() {
-    // Function called by the START ARCHIVING button.
     const nameInput = document.getElementById('userNameInput');
     const newName = nameInput ? nameInput.value.trim() : '';
 
@@ -166,7 +165,7 @@ function scrollToTop() {
 }
 
 
-// --- 3. FILTERING LOGIC ---
+// --- 3. HISTORICAL FILTERING LOGIC ---
 
 function applyYearFilter(events, filterValue) {
     if (filterValue === 'all') {
@@ -311,7 +310,7 @@ function searchRandom() {
     lookupEvent();
 }
 
-// Function for Topic Search (Wikipedia Article Lookup)
+// NOTE: This is for the OLD dedicated Topic Search path (B)
 async function searchTopic() {
     const query = document.getElementById('topicSearchInput').value.trim();
     const resultList = document.getElementById('topicResultList');
@@ -360,7 +359,6 @@ async function searchTopic() {
     }
 }
 
-
 // --- 6. CLEAR SEARCH FUNCTIONS ---
 
 function clearHistoryResults() {
@@ -383,11 +381,13 @@ function clearTopicResults() {
 function clearCountryResults() {
     const resultList = document.getElementById('countryResultList');
     const searchInput = document.getElementById('countrySearchInput');
+    const keywordInput = document.getElementById('keywordSearchInput'); // New
     
     resultList.innerHTML = `<li class="event-item placeholder">
         <span class="year-label">System:</span> Select a country and category above.
-    </dli>`;
-    searchInput.value = ''; // Clear the input bar
+    </li>`;
+    searchInput.value = ''; 
+    keywordInput.value = ''; // Clear keyword input as well
 }
 
 
@@ -466,7 +466,26 @@ function loadCountrySelector() {
     document.getElementById('countrySearchInput').value = '';
 }
 
-// Function to handle the final news search query (using country name from input)
+// --- NEW FUNCTION: KEYWORD SEARCH CALL ---
+async function searchKeywords() {
+    const keywordInput = document.getElementById('keywordSearchInput');
+    const query = keywordInput ? keywordInput.value.trim() : '';
+    const resultList = document.getElementById('countryResultList');
+
+    if (!query) {
+        resultList.innerHTML = '<li class="event-item placeholder">Please enter a keyword or phrase.</li>';
+        return;
+    }
+
+    const searchQuery = `${query} general news`; // Use free-form query
+    resultList.innerHTML = `<li class="event-item placeholder">Searching Global News for "${query}"...</li>`;
+
+    // Execute the news proxy call
+    await executeNewsSearch(searchQuery, resultList);
+}
+
+
+// Function to handle the final news search query (Country/Category)
 async function fetchCountryNews() {
     const countryName = document.getElementById('countrySearchInput').value.trim();
     const category = document.getElementById('newsCategorySelector').value;
@@ -477,7 +496,6 @@ async function fetchCountryNews() {
         return;
     }
 
-    // --- FIX: Dynamic Search Query based on Category ---
     let searchQuery;
     let displayCategory = category;
 
@@ -490,7 +508,12 @@ async function fetchCountryNews() {
 
     resultList.innerHTML = `<li class="event-item placeholder">Searching for LIVE ${displayCategory} in ${countryName}...</li>`;
 
-    // --- EXECUTES SECURE VERCEL PROXY CALL ---
+    // Execute the news proxy call
+    await executeNewsSearch(searchQuery, resultList);
+}
+
+// --- CORE PROXY EXECUTION LOGIC (Separated for reuse) ---
+async function executeNewsSearch(searchQuery, resultList) {
     try {
         const newsResponse = await fetch(NEWS_PROXY_ENDPOINT, { 
             method: 'POST', 
@@ -527,7 +550,7 @@ async function fetchCountryNews() {
     } catch (error) {
         console.error("Frontend Fetch Error:", error);
         resultList.innerHTML = `<li class="event-item" style="border-left-color: red;">
-            <span class="year-label">CONNECTION FAILED:</span> Could not reach the news proxy function. Check Vercel logs.
+            <span class="year-label">CONNECTION FAILED:</span> Could not reach the news proxy function.
         </li>`;
     }
 }
