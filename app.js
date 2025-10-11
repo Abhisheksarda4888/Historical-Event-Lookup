@@ -19,7 +19,7 @@ const CATEGORY_KEYWORDS = {
     'all': [''], 
 };
 
-let countryList = []; 
+let countryList = []; // Stores all fetched countries
 
 
 // --- 2. PROFILE & NAVIGATION CORE FUNCTIONS (Working and Final) ---
@@ -310,7 +310,6 @@ function searchRandom() {
     lookupEvent();
 }
 
-// NOTE: This is for the OLD dedicated Topic Search path (B)
 async function searchTopic() {
     const query = document.getElementById('topicSearchInput').value.trim();
     const resultList = document.getElementById('topicResultList');
@@ -359,6 +358,7 @@ async function searchTopic() {
     }
 }
 
+
 // --- 6. CLEAR SEARCH FUNCTIONS ---
 
 function clearHistoryResults() {
@@ -381,13 +381,13 @@ function clearTopicResults() {
 function clearCountryResults() {
     const resultList = document.getElementById('countryResultList');
     const searchInput = document.getElementById('countrySearchInput');
-    const keywordInput = document.getElementById('keywordSearchInput'); // New
+    const keywordInput = document.getElementById('keywordSearchInput');
     
     resultList.innerHTML = `<li class="event-item placeholder">
         <span class="year-label">System:</span> Select a country and category above.
     </li>`;
-    searchInput.value = ''; 
-    keywordInput.value = ''; // Clear keyword input as well
+    searchInput.value = ''; // Clear the country input bar
+    keywordInput.value = ''; // Clear the keyword input bar
 }
 
 
@@ -466,18 +466,18 @@ function loadCountrySelector() {
     document.getElementById('countrySearchInput').value = '';
 }
 
-// --- NEW FUNCTION: KEYWORD SEARCH CALL ---
+// Function to handle the FINAL general keyword search
 async function searchKeywords() {
     const keywordInput = document.getElementById('keywordSearchInput');
     const query = keywordInput ? keywordInput.value.trim() : '';
-    const resultList = document.getElementById('countryResultList');
-
+    const resultList = document.getElementById('countryResultList'); // Use the same result list
+    
     if (!query) {
         resultList.innerHTML = '<li class="event-item placeholder">Please enter a keyword or phrase.</li>';
         return;
     }
 
-    const searchQuery = `${query} general news`; // Use free-form query
+    const searchQuery = `${query} general news`; // Formulate query for the proxy
     resultList.innerHTML = `<li class="event-item placeholder">Searching Global News for "${query}"...</li>`;
 
     // Execute the news proxy call
