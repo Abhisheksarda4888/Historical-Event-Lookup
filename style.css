@@ -1,4 +1,4 @@
-/* --- ROOT STYLES (No change) --- */
+/* --- ROOT STYLES --- */
 :root {
     --color-primary: #000000;
     --color-secondary: #FFFFFF;
@@ -6,9 +6,10 @@
     --color-border: #BBBBBB;
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Roboto Mono', monospace; 
+    --color-accent-blue: #4169E1; 
 }
 
-/* --- GLOBAL STYLES (No change) --- */
+/* --- GLOBAL STYLES --- */
 .hidden-app {
     display: none !important;
 }
@@ -37,7 +38,7 @@ body {
     overflow: hidden;
 }
 
-/* --- MODAL STYLES (VIBRANT ENTRY POINT - No change) --- */
+/* --- MODAL STYLES (VIBRANT ENTRY POINT) --- */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -67,7 +68,7 @@ body {
     font-family: var(--font-heading);
     font-size: 1.8em; 
     margin-bottom: 5px;
-    color: #4169E1; /* Royal Blue accent color */
+    color: var(--color-accent-blue); /* Royal Blue accent color */
     text-transform: uppercase;
 }
 
@@ -87,7 +88,7 @@ body {
 
 .modal-btn {
     padding: 15px 20px;
-    background-color: #4169E1; 
+    background-color: var(--color-accent-blue); 
     color: var(--color-secondary);
     border: 3px solid #1A1A1A; 
     border-radius: 8px; 
@@ -103,11 +104,11 @@ body {
     background-color: #1A1A1A; 
     color: var(--color-secondary);
     transform: translateY(-2px); 
-    box-shadow: 6px 6px 0 #4169E1; 
+    box-shadow: 6px 6px 0 var(--color-accent-blue); 
 }
 
 
-/* --- HEADER AND NAVIGATION STYLES (No change) --- */
+/* --- HEADER AND NAVIGATION STYLES --- */
 header {
     background-color: var(--color-secondary);
     color: var(--color-primary);
@@ -170,7 +171,7 @@ header h1 {
     font-family: var(--font-body);
 }
 
-/* --- CONTROLS SECTION (General Styles for Dropdowns/Buttons) --- */
+/* --- CONTROLS SECTION --- */
 .controls-wrapper {
     padding: 20px 30px;
     background-color: #f2f2f2;
@@ -227,13 +228,12 @@ header h1 {
 }
 
 /* --- SEARCH VIEW STYLES --- */
-#searchView .search-controls-wrapper, #countryView .search-controls-wrapper {
+#searchView .search-controls-wrapper {
     padding: 20px 30px;
     background-color: #f2f2f2;
     border-bottom: 2px solid var(--color-primary);
 }
 
-/* Keyword search bar group */
 .search-input-group {
     display: flex;
     gap: 15px;
@@ -252,43 +252,6 @@ header h1 {
 .search-button {
     padding: 0 15px; 
     white-space: nowrap;
-}
-
-
-/* --- NEW AUTCOMPLETE/TYPEAHEAD STYLES --- */
-.country-selector-wrapper {
-    position: relative; 
-    flex-grow: 1;
-    z-index: 10; 
-    min-width: 150px; 
-}
-
-.autocomplete-list {
-    position: absolute;
-    top: 100%; 
-    left: 0;
-    right: 0;
-    max-height: 250px;
-    overflow-y: auto;
-    border: 1px solid var(--color-primary);
-    background-color: var(--color-secondary);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-top: none; 
-    z-index: 10;
-}
-
-.autocomplete-item {
-    padding: 10px 15px;
-    cursor: pointer;
-    text-align: left;
-    font-size: 0.9em;
-    color: var(--color-primary);
-    border-bottom: 1px solid #eee;
-    text-transform: uppercase;
-}
-
-.autocomplete-item:hover, .autocomplete-item.selected {
-    background-color: #f2f2f2; 
 }
 
 
