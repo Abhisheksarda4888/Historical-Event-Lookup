@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Curated Archive</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="initialModal" class="modal-overlay">
+        <div class="modal-content">
+            <div id="registrationForm">
+                <h2 class="modal-title">WELCOME NEW ARCHIVIST</h2>
+                <p>Please enter your name to begin your research journey:</p>
+                
+                <input type="text" id="userNameInput" placeholder="Enter your Name" class="control-input" style="width: 80%; margin-bottom: 20px; text-transform: none;">
+
+                <button class="modal-btn" onclick="createUserProfile()">
+                    START ARCHIVING
+                </button>
+            </div>
+            
+            <div id="pathSelection" class="hidden-app">
+                <h2 id="welcomeHeader" class="modal-title"></h2> <p>Select your research path:</p>
+                <div class="modal-buttons">
+                    <button class="modal-btn" onclick="selectPath('historical')">
+                        ON THIS DAY IN HISTORY
+                    </button>
+                    <button class="modal-btn" onclick="selectPath('search')">
+                        SEARCH TOPIC
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="mainApp" class="container hidden-app">
+        
+        <header>
+            <div class="header-content">
+                <div class="header-left">
+                    <span id="backButton" class="back-btn" onclick="showModal()">
+                        <i class="fas fa-arrow-left"></i> 
+                    </span>
+                    <h1>The Curated Archive</h1>
+                    <p class="subtitle">An Archive for Serious Readers</p>
+                </div>
+                <div class="header-right">
+                    <div id="realTimeClock" class="real-time-clock">Loading Clock...</div>
+                </div>
+            </div>
+        </header>
+
+        <div id="historicalView" class="hidden-app"> 
+            <div class="controls-wrapper">
+                <div class="controls">
+                    <select id="monthSelector" class="control-input">
+                        <option value="">SELECT MONTH</option>
+                    </select>
+                    <select id="daySelector" class="control-input">
+                        <option value="">SELECT DAY</option>
+                    </select>
+                    <select id="yearFilter" class="control-input">
+                        <option value="all">ALL TIME</option>
+                        <option value="2000">21st Century (2001 - Present)</option>
+                        <option value="1900">20th Century (1901 - 2000)</option>
+                        <option value="1800">19th Century (1801 - 1900)</option>
+                        <option value="before1800">Before 1800</option>
+                    </select>
+                    <select id="categoryFilter" class="control-input" onchange="lookupEvent()">
+                        <option value="all">FILTER BY CATEGORY (ALL)</option>
+                        <option value="science">Science & Technology</option>
+                        <option value="wars">Wars & Conflicts</option>
+                        <option value="art">Art, Literature & Music</option>
+                        <option value="politics">Politics & Legislation</option>
+                        <option value="disaster">Disasters & Accidents</option>
+                        <option value="sports">Sports & Records</option>
+                        <option value="economy">Economy & Business</option>
+                        <option value="births">Births of Notable People</option>
+                    </select>
+                    <button onclick="lookupEvent()" class="control-button">SEARCH ARCHIVE</button>
+                </div>
+            </div>
+            
+            <div class="quick-searches-wrapper">
+                <button onclick="searchToday()" class="quick-button">
+                    TODAY'S HISTORY
+                </button>
+                <button onclick="searchRandom()" class="quick-button">
+                    RANDOM DATE
+                </button>
+            </div>
+
+            <div class="clear-wrapper">
+                <button onclick="clearHistoryResults()" class="clear-button">CLEAR ARCHIVED ENTRIES</button>
+            </div>
+
+            <div class="results-area">
+                <h2>Archived Entries</h2>
+                <ul id="eventList" class="event-list">
+                    <li class="event-item placeholder">
+                        <span class="year-label">System:</span> Select a date or click a button above.
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="searchView" class="hidden-app">
+            <div class="search-controls-wrapper">
+                <div class="search-input-group">
+                    <input type="text" id="topicSearchInput" placeholder="Search any topic on Wikipedia..." class="control-input search-input">
+                    <button onclick="searchTopic()" class="control-button search-button">
+                        SEARCH WIKIPEDIA
+                    </button>
+                </div>
+            </div>
+            
+            <div class="clear-wrapper">
+                <button onclick="clearTopicResults()" class="clear-button">CLEAR SEARCH RESULTS</button>
+            </div>
+            
+            <div class="results-area">
+                <h2>Search Results</h2>
+                <ul id="topicResultList" class="event-list">
+                    <li class="event-item placeholder">
+                        <span class="year-label">System:</span> Enter a topic to begin searching.
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <button id="scrollUpBtn" onclick="scrollToTop()" class="scroll-up-btn hidden-app">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="app-footer">
+            Made With ❤️ By Abhishek Sarda
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
