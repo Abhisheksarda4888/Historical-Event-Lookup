@@ -1,6 +1,0 @@
-{
-  "name": "the-curated-archive",
-  "dependencies": {
-    "node-fetch": "^2.6.1"
-  }
-}
