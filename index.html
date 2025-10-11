@@ -33,10 +33,7 @@
                     <button class="modal-btn" onclick="selectPath('search')">
                         TOPIC SEARCH
                     </button>
-                    <button class="modal-btn" onclick="selectPath('country')">
-                        GLOBAL COUNTRY FACTS
-                    </button>
-                </div>
+                    </div>
             </div>
         </div>
     </div>
@@ -130,61 +127,6 @@
                 <ul id="topicResultList" class="event-list">
                     <li class="event-item placeholder">
                         <span class="year-label">System:</span> Enter a topic to begin searching.
-                    </li>
-                </ul>
-            </div>
-        </div>
-        
-        <div id="countryView" class="hidden-app">
-            <div class="search-controls-wrapper">
-                
-                <div class="search-input-group keyword-search-group">
-                    <input type="text" id="keywordSearchInput" placeholder="Search keywords globally (e.g., Nepal government collapse)" class="control-input search-input">
-                    <button onclick="searchKeywords()" class="control-button search-button">
-                        KEYWORD SEARCH
-                    </button>
-                </div>
-                
-                <p style="text-align: center; font-size: 0.85em; color: #555; margin: 15px 0 10px;">— OR —</p>
-                
-                <div class="controls country-controls">
-                    
-                    <div class="country-selector-wrapper">
-                        <input type="text" id="countrySearchInput" 
-                               placeholder="Type or Select Country" 
-                               class="control-input country-search-input"
-                               oninput="filterCountries()" 
-                               onfocus="showCountryList()"
-                               autocomplete="off">
-                        <div id="countryListDropdown" class="autocomplete-list hidden-app" 
-                             onmouseleave="document.getElementById('countryListDropdown').classList.add('hidden-app')">
-                            <div class="autocomplete-item placeholder">Loading countries...</div>
-                        </div>
-                    </div>
-
-                    <select id="newsCategorySelector" class="control-input">
-                        <option value="ALL">ALL NEWS / GENERAL FACTS</option>
-                        <option value="FINANCE & ECONOMY">FINANCE & ECONOMY</option>
-                        <option value="POLITICS & GOVT">POLITICS & GOVT</option>
-                        <option value="SPORTS & CULTURE">SPORTS & CULTURE</option>
-                        <option value="TRAVEL & SAFETY">TRAVEL & SAFETY</option>
-                    </select>
-
-                    <button onclick="fetchCountryNews()" class="control-button">
-                        GET LIVE FACTS
-                    </button>
-                </div>
-            </div>
-            
-            <div class="clear-wrapper">
-                <button onclick="clearCountryResults()" class="clear-button">CLEAR GLOBAL FACTS</button>
-            </div>
-
-            <div class="results-area">
-                <h2>Global Fact Report</h2>
-                <ul id="countryResultList" class="event-list">
-                    <li class="event-item placeholder">
-                        <span class="year-label">System:</span> Select a country and category above.
                     </li>
                 </ul>
             </div>
